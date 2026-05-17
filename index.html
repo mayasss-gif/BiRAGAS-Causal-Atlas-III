@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BiRAGAS · Causal Atlas · Vol. III — A Kinetic Field Guide</title>
+<meta name="description" content="A kinetic field guide to the BiRAGAS reasoning engine. 25 modules, 8 causal engines, 3 stacked tiers — rendered as an animated typographic poster series.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Major+Mono+Display&family=Unbounded:wght@300;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --mulberry: #3D0E40;
+    --mulberry-deep: #2A0830;
+    --chartreuse: #D9F25C;
+    --chartreuse-soft: #E5F77C;
+    --cyan: #00D4E1;
+    --cream: #F5EFE0;
+    --cream-deep: #E8DEC8;
+    --ink: #0A0A0A;
+    --hot-pink: #FF3D7F;
+    --rule: rgba(10,10,10,0.18);
+    --rule-light: rgba(245,239,224,0.18);
+
+    --font-display: "Bodoni Moda", "Bodoni 72", "Didot", serif;
+    --font-chunk:   "Unbounded", "Helvetica Neue", sans-serif;
+    --font-body:    "Lora", Georgia, serif;
+    --font-mono:    "Major Mono Display", "IBM Plex Mono", ui-monospace, monospace;
+
+    --gutter: clamp(20px, 4vw, 80px);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.55;
+    overflow-x: hidden;
+    cursor: none;
+    /* slow conic mesh that breathes behind everything */
+    background-image:
+      radial-gradient(ellipse 120% 70% at 80% 0%, rgba(217,242,92,0.22), transparent 60%),
+      radial-gradient(ellipse 90% 60% at 10% 90%, rgba(0,212,225,0.15), transparent 60%);
+  }
+
+  /* paper grain */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 200;
+    opacity: 0.28;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='280' height='280'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.07 0 0 0 0 0.06 0 0 0 0 0.05 0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: 280px 280px;
+    animation: grain 1.6s steps(6) infinite;
+  }
+  @keyframes grain {
+    0%   { transform: translate(0,0); }
+    16%  { transform: translate(-2%, 1%); }
+    33%  { transform: translate(2%, -1%); }
+    50%  { transform: translate(-1%, 2%); }
+    66%  { transform: translate(3%, -2%); }
+    83%  { transform: translate(-2%, -1%); }
+    100% { transform: translate(0,0); }
+  }
+
+  /* ─── CURSOR · chartreuse blob with trailing copies ─── */
+  .cursor {
+    position: fixed; top: 0; left: 0;
+    width: 28px; height: 28px;
+    background: var(--chartreuse);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: difference;
+    transition: width 0.25s, height 0.25s, background 0.2s;
+  }
+  .cursor.dark { background: var(--mulberry); mix-blend-mode: normal; }
+  .trail {
+    position: fixed; top: 0; left: 0;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    background: var(--chartreuse);
+    opacity: 0.4;
+    mix-blend-mode: difference;
+  }
+  @media (pointer: coarse) {
+    body { cursor: auto; }
+    .cursor, .trail { display: none; }
+  }
+
+  /* ─── ANIMATED FLOATING TYPOGRAPHIC SPECIMENS ─── */
+  .floating-spec {
+    position: fixed;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 96, "wght" 400;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0.06;
+    user-select: none;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     TOP STRIP
+  ═════════════════════════════════════════════════════════════════ */
+  .top-strip {
+    background: var(--ink);
+    color: var(--cream);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: lowercase;
+    padding: 11px var(--gutter);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 50;
+    border-bottom: 1px solid var(--ink);
+  }
+  .top-strip .ch { color: var(--chartreuse); }
+  .top-strip .cy { color: var(--cyan); }
+  .top-strip .blink { animation: blink 1.4s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0.15; } }
+
+  /* ─── MULTI-LANE MARQUEE ─── */
+  .marquees {
+    position: relative;
+    z-index: 40;
+    border-bottom: 2px solid var(--ink);
+    background: var(--cream-deep);
+    overflow: hidden;
+  }
+  .marquee-lane {
+    overflow: hidden;
+    border-bottom: 1px solid var(--rule);
+    padding: 8px 0;
+  }
+  .marquee-lane:last-child { border-bottom: none; }
+  .marquee-lane .track {
+    display: flex;
+    gap: 50px;
+    white-space: nowrap;
+    will-change: transform;
+  }
+  .marquee-lane.l1 .track { animation: marq 60s linear infinite; font-family: var(--font-display); font-style: italic; font-size: 24px; font-variation-settings: "opsz" 96, "wght" 500; }
+  .marquee-lane.l2 .track { animation: marq-rev 80s linear infinite; font-family: var(--font-chunk); font-weight: 700; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; }
+  .marquee-lane.l3 .track { animation: marq 100s linear infinite; font-family: var(--font-mono); font-size: 14px; letter-spacing: 0.06em; }
+  .marquee-lane.l2 { background: var(--mulberry); color: var(--chartreuse); }
+  .marquee-lane.l3 { color: var(--mulberry); }
+  .marquee-lane .star::before { content: "✦"; margin-right: 14px; color: var(--hot-pink); }
+  .marquee-lane.l2 .star::before { color: var(--chartreuse); }
+  @keyframes marq     { to { transform: translateX(-50%); } }
+  @keyframes marq-rev { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+  /* ═══════════════════════════════════════════════════════════════
+     COVER POSTER · the mandala centerpiece
+  ═════════════════════════════════════════════════════════════════ */
+  .cover {
+    position: relative;
+    padding: clamp(40px, 7vh, 90px) var(--gutter) clamp(60px, 9vh, 120px);
+    overflow: hidden;
+    border-bottom: 4px solid var(--ink);
+  }
+  /* rotating conic gradient backdrop */
+  .cover::before {
+    content: "";
+    position: absolute;
+    top: -30%; left: -30%;
+    width: 160%; height: 160%;
+    background:
+      conic-gradient(from 0deg,
+        var(--cream) 0deg,
+        rgba(217,242,92,0.4) 60deg,
+        var(--cream) 120deg,
+        rgba(0,212,225,0.3) 180deg,
+        var(--cream) 240deg,
+        rgba(61,14,64,0.18) 300deg,
+        var(--cream) 360deg);
+    animation: spin-bg 120s linear infinite;
+    z-index: 0;
+    opacity: 0.65;
+  }
+  @keyframes spin-bg { to { transform: rotate(360deg); } }
+
+  .cover-inner {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  @media (max-width: 1100px) {
+    .cover-inner { grid-template-columns: 1fr; gap: 50px; }
+  }
+
+  .cover-meta-row {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: lowercase;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 50px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .cover-meta-row .right { text-align: right; color: var(--mulberry); }
+  .cover-meta-row .ch { color: var(--chartreuse); background: var(--ink); padding: 2px 8px; }
+
+  .cover-headline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 96, "wght" 500;
+    font-size: clamp(60px, 12vw, 200px);
+    line-height: 0.78;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    text-align: left;
+    position: relative;
+  }
+  .cover-headline .line { display: block; }
+  .cover-headline .ital-thin {
+    font-variation-settings: "opsz" 96, "wght" 400;
+    color: var(--mulberry);
+  }
+  .cover-headline .chunk {
+    font-family: var(--font-chunk);
+    font-style: normal;
+    font-weight: 900;
+    color: var(--ink);
+    -webkit-text-stroke: 0;
+    font-size: 0.78em;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+  }
+  .cover-headline .chunk::before {
+    content: "";
+    position: absolute;
+    inset: 0.1em -0.15em -0.05em -0.1em;
+    background: var(--chartreuse);
+    z-index: -1;
+    transform: rotate(-1deg);
+  }
+  .cover-headline .splash {
+    background: var(--mulberry);
+    color: var(--chartreuse);
+    padding: 0 0.1em;
+    display: inline-block;
+    transform: rotate(-2deg);
+  }
+  .cover-headline .vol {
+    display: block;
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 0.16em;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mulberry);
+    margin-top: 0.3em;
+  }
+
+  .cover-deck {
+    margin-top: 40px;
+    max-width: 500px;
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: clamp(17px, 1.4vw, 21px);
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .cover-deck::before {
+    content: "❡";
+    color: var(--hot-pink);
+    margin-right: 8px;
+    font-style: normal;
+  }
+
+  /* ─── MANDALA — the rotating ring of 25 module names ─── */
+  .mandala-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+  .mandala-wrap svg { width: 100%; height: 100%; }
+  .mandala-ring {
+    transform-origin: center;
+    animation: spin 90s linear infinite;
+  }
+  .mandala-ring.inner { animation: spin-rev 60s linear infinite; }
+  .mandala-pulse {
+    transform-origin: center;
+    animation: pulse 4s ease-in-out infinite;
+  }
+  @keyframes spin     { to { transform: rotate(360deg); } }
+  @keyframes spin-rev { to { transform: rotate(-360deg); } }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50%      { transform: scale(1.04); opacity: 0.6; }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     STAT BAND — counters
+  ═════════════════════════════════════════════════════════════════ */
+  .stats {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 50px var(--gutter);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    border-bottom: 2px solid var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .stats .item { position: relative; z-index: 2; }
+  .stats .k {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 96, "wght" 500;
+    font-size: clamp(70px, 11vw, 180px);
+    line-height: 0.85;
+    color: var(--chartreuse);
+    letter-spacing: -0.04em;
+  }
+  .stats .item:nth-child(2) .k { color: var(--cyan); }
+  .stats .item:nth-child(3) .k { color: var(--hot-pink); }
+  .stats .item:nth-child(4) .k { color: var(--cream); }
+  .stats .v {
+    font-family: var(--font-chunk);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cream);
+    margin-top: 14px;
+    border-top: 1px solid var(--cream);
+    padding-top: 10px;
+  }
+  @media (max-width: 880px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     CAUSION POSTER
+  ═════════════════════════════════════════════════════════════════ */
+  .causion-poster {
+    padding: clamp(80px, 12vh, 160px) var(--gutter);
+    position: relative;
+    overflow: hidden;
+    border-bottom: 2px solid var(--ink);
+  }
+  .causion-poster .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: lowercase;
+    color: var(--mulberry);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .causion-poster .eyebrow::before {
+    content: "§02"; color: var(--hot-pink); font-weight: 700;
+  }
+  .causion-poster h2 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 96, "wght" 600;
+    font-size: clamp(70px, 14vw, 240px);
+    line-height: 0.82;
+    letter-spacing: -0.045em;
+    color: var(--ink);
+    transform: rotate(-1deg);
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .causion-poster h2 .acc {
+    background: var(--chartreuse);
+    color: var(--ink);
+    padding: 0 0.15em;
+    display: inline-block;
+    transform: rotate(2deg);
+  }
+  .causion-poster .deck {
+    max-width: 720px;
+    font-family: var(--font-body);
+    font-size: clamp(17px, 1.4vw, 21px);
+    line-height: 1.6;
+    color: var(--ink);
+    margin-bottom: 50px;
+  }
+  .causion-poster .deck b { color: var(--mulberry); }
+
+  .ask-bar {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 24px 30px;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(20px, 2.2vw, 32px);
+    line-height: 1.4;
+    font-variation-settings: "opsz" 36, "wght" 400;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 800px;
+    margin-top: 40px;
+    border-left: 8px solid var(--chartreuse);
+    position: relative;
+  }
+  .ask-bar::before {
+    content: "$";
+    font-family: var(--font-mono);
+    color: var(--chartreuse);
+    font-style: normal;
+  }
+  .ask-bar .typer::after {
+    content: "▌";
+    color: var(--chartreuse);
+    animation: caret 0.9s steps(2) infinite;
+  }
+  @keyframes caret { 50% { opacity: 0; } }
+
+  /* causion flow arrows */
+  .causion-flow {
+    margin-top: 60px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--mulberry);
+    position: relative;
+  }
+  .causion-flow .step {
+    padding: 18px 12px;
+    border: 1px solid var(--ink);
+    background: var(--cream-deep);
+    position: relative;
+  }
+  .causion-flow .step .n {
+    font-family: var(--font-chunk);
+    font-weight: 700;
+    color: var(--hot-pink);
+    font-size: 11px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .causion-flow .step strong {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 22px;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .causion-flow .step:not(:last-child)::after {
+    content: "→";
+    position: absolute;
+    right: -22px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--chartreuse);
+    font-size: 30px;
+    z-index: 2;
+    background: var(--cream-deep);
+    padding: 0 4px;
+    line-height: 1;
+  }
+  @media (max-width: 760px) {
+    .causion-flow { grid-template-columns: 1fr; }
+    .causion-flow .step:not(:last-child)::after { right: 50%; top: auto; bottom: -22px; transform: translateX(50%) rotate(90deg); }
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     TIER POSTERS
+  ═════════════════════════════════════════════════════════════════ */
+  .tier {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(80px, 12vh, 160px) var(--gutter);
+    border-bottom: 4px solid var(--ink);
+  }
+  .tier.t1 { background: var(--mulberry); color: var(--cream); }
+  .tier.t2 { background: var(--chartreuse); color: var(--ink); }
+  .tier.t3 { background: var(--cyan); color: var(--ink); }
+
+  /* full-bleed giant T·0X */
+  .tier .mega {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 96, "wght" 700;
+    font-size: clamp(280px, 50vw, 720px);
+    line-height: 0.78;
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 2px currentColor;
+    opacity: 0.18;
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
+    transition: opacity 0.6s, -webkit-text-stroke 0.6s;
+  }
+  .tier:hover .mega { opacity: 0.4; -webkit-text-stroke: 4px currentColor; }
+
+  .tier-head {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 30px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid currentColor;
+    margin-bottom: 60px;
+  }
+  .tier-head .label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: lowercase;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .tier-head .label .badge {
+    display: inline-flex;
+    width: 36px; height: 36px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    align-items: center; justify-content: center;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 36, "wght" 600;
+    font-size: 18px;
+  }
+  .tier-head h2 {
+    font-family: var(--font-chunk);
+    font-weight: 900;
+    font-size: clamp(54px, 9vw, 140px);
+    line-height: 0.88;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    color: inherit;
+  }
+  .tier-head h2 .ital {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 96, "wght" 500;
+    text-transform: none;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
+  .tier-head .right-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: lowercase;
+    text-align: right;
+    line-height: 1.6;
+  }
+  .tier .deck {
+    position: relative; z-index: 2;
+    max-width: 70ch;
+    font-family: var(--font-body);
+    font-size: clamp(17px, 1.4vw, 21px);
+    line-height: 1.6;
+    margin-bottom: 50px;
+  }
+  .tier .deck b { color: inherit; font-weight: 700; }
+  .tier.t1 .deck b { background: var(--chartreuse); color: var(--ink); padding: 0 6px; }
+  .tier.t3 .deck b { background: var(--mulberry); color: var(--cream); padding: 0 6px; }
+
+  /* MODULE CARDS */
+  .cards {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 22px;
+  }
+  .card {
+    background: var(--cream);
+    color: var(--ink);
+    border: 2px solid var(--ink);
+    padding: 22px 22px 60px;
+    position: relative;
+    transition: transform 0.35s cubic-bezier(.2,.6,.1,1), box-shadow 0.35s;
+    transform-style: preserve-3d;
+    overflow: hidden;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, var(--chartreuse) 0, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.35s;
+    pointer-events: none;
+  }
+  .card:hover::before { opacity: 0.6; }
+  .card:hover {
+    transform: translate(-4px, -4px) rotate(-0.6deg);
+    box-shadow: 8px 8px 0 var(--ink);
+  }
+  .tier.t1 .card { background: var(--cream); }
+  .tier.t2 .card { background: var(--cream); }
+  .tier.t3 .card { background: var(--cream); }
+
+  .card .badge {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 38px; height: 38px;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    display: flex;
+    align-items: center; justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--mulberry);
+    background: var(--cream);
+    transition: transform 0.5s ease;
+  }
+  .card:hover .badge { transform: rotate(360deg); background: var(--chartreuse); }
+
+  .card .num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 96, "wght" 700;
+    font-size: 80px;
+    line-height: 0.85;
+    color: var(--mulberry);
+    letter-spacing: -0.04em;
+    margin-bottom: -4px;
+  }
+  .tier.t2 .card .num { color: var(--mulberry); }
+  .tier.t3 .card .num { color: var(--mulberry); }
+
+  .card .name {
+    font-family: var(--font-chunk);
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    color: var(--ink);
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+  }
+  .card .name-sub {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 24, "wght" 400;
+    font-size: 16px;
+    color: var(--mulberry);
+    margin-bottom: 14px;
+  }
+  .card .spec {
+    border-top: 1px solid var(--rule);
+    padding-top: 12px;
+    margin-bottom: 14px;
+    display: grid;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .card .spec .row { display: grid; grid-template-columns: 64px 1fr; gap: 12px; }
+  .card .spec .k { color: var(--hot-pink); letter-spacing: 0.1em; text-transform: lowercase; }
+  .card .func {
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  .card .func::before {
+    content: "❯ ";
+    color: var(--hot-pink);
+    font-weight: 700;
+  }
+  .card .scope-tag {
+    position: absolute;
+    bottom: 14px; left: 22px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: lowercase;
+    color: var(--mulberry);
+    border: 1px solid var(--mulberry);
+    padding: 2px 8px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     FLOW POSTER (end-to-end)
+  ═════════════════════════════════════════════════════════════════ */
+  .flow {
+    background: var(--ink);
+    color: var(--cream);
+    padding: clamp(80px, 12vh, 160px) var(--gutter);
+    position: relative;
+    overflow: hidden;
+    border-bottom: 4px solid var(--ink);
+  }
+  .flow .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: lowercase;
+    color: var(--chartreuse);
+    margin-bottom: 20px;
+  }
+  .flow h2 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 96, "wght" 500;
+    font-size: clamp(54px, 9vw, 150px);
+    line-height: 0.86;
+    letter-spacing: -0.04em;
+    margin-bottom: 50px;
+  }
+  .flow h2 .acc { color: var(--chartreuse); }
+  .flow h2 .pink { color: var(--hot-pink); }
+
+  .flow-svg-wrap {
+    margin-top: 40px;
+    padding: 30px 0;
+    border-top: 1px solid var(--chartreuse);
+    border-bottom: 1px solid var(--chartreuse);
+    overflow-x: auto;
+  }
+  .flow-svg-wrap svg {
+    display: block;
+    min-width: 900px;
+    width: 100%;
+    height: auto;
+  }
+  .flow-path {
+    stroke-dasharray: 2400;
+    stroke-dashoffset: 2400;
+    animation: draw 6s ease-out forwards;
+  }
+  .flow-path.in { animation-play-state: running; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+
+  /* ═══════════════════════════════════════════════════════════════
+     MANIFESTO POSTER
+  ═════════════════════════════════════════════════════════════════ */
+  .manifesto {
+    background: var(--chartreuse);
+    color: var(--ink);
+    padding: clamp(100px, 18vh, 220px) var(--gutter);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 4px solid var(--ink);
+  }
+  /* animated paint splatter */
+  .manifesto::before {
+    content: "";
+    position: absolute;
+    top: 10%; left: 5%;
+    width: 240px; height: 240px;
+    background: var(--mulberry);
+    border-radius: 50% 60% 50% 70% / 50% 50% 70% 50%;
+    animation: blob 12s ease-in-out infinite;
+    z-index: 1;
+    opacity: 0.18;
+  }
+  .manifesto::after {
+    content: "";
+    position: absolute;
+    bottom: 8%; right: 6%;
+    width: 320px; height: 320px;
+    background: var(--cyan);
+    border-radius: 60% 50% 70% 50% / 50% 60% 50% 70%;
+    animation: blob 16s ease-in-out infinite reverse;
+    z-index: 1;
+    opacity: 0.2;
+  }
+  @keyframes blob {
+    0%, 100% { transform: translate(0,0) scale(1) rotate(0deg); border-radius: 50% 60% 50% 70% / 50% 50% 70% 50%; }
+    25% { transform: translate(20px,-20px) scale(1.1) rotate(60deg); border-radius: 70% 40% 60% 50% / 60% 70% 40% 50%; }
+    50% { transform: translate(-15px,15px) scale(0.95) rotate(120deg); border-radius: 40% 70% 50% 60% / 50% 40% 70% 60%; }
+    75% { transform: translate(10px,10px) scale(1.05) rotate(200deg); border-radius: 60% 50% 70% 40% / 70% 50% 60% 40%; }
+  }
+  .manifesto > * { position: relative; z-index: 2; }
+
+  .manifesto .small {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: lowercase;
+    color: var(--mulberry);
+    margin-bottom: 60px;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .manifesto .small::before, .manifesto .small::after {
+    content: ""; width: 40px; height: 1px; background: var(--mulberry);
+  }
+  .manifesto h2 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 96, "wght" 500;
+    font-size: clamp(42px, 7.5vw, 130px);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+  .manifesto h2 .strike {
+    text-decoration: line-through;
+    text-decoration-color: var(--hot-pink);
+    text-decoration-thickness: 5px;
+  }
+  .manifesto h2.next {
+    font-variation-settings: "opsz" 96, "wght" 700;
+  }
+  .manifesto h2.next .mul { color: var(--mulberry); }
+  .manifesto .period {
+    display: inline-block;
+    width: 0.22em; height: 0.22em;
+    background: var(--hot-pink);
+    border-radius: 50%;
+    transform: translateY(0.05em);
+    margin-left: 0.05em;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .manifesto .tag {
+    margin-top: 80px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: lowercase;
+    color: var(--mulberry);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     COLOPHON
+  ═════════════════════════════════════════════════════════════════ */
+  .colophon {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 80px var(--gutter);
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 50px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: lowercase;
+    line-height: 1.85;
+  }
+  .colophon h4 {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 36, "wght" 500;
+    text-transform: none;
+    font-size: 28px;
+    letter-spacing: -0.01em;
+    color: var(--chartreuse);
+    margin-bottom: 14px;
+  }
+  .colophon a {
+    color: var(--cream);
+    text-decoration: none;
+    border-bottom: 1px solid var(--chartreuse);
+  }
+  .colophon a:hover { background: var(--chartreuse); color: var(--ink); }
+  @media (max-width: 880px) { .colophon { grid-template-columns: 1fr; } }
+
+  .bottom-rule {
+    background: var(--mulberry);
+    color: var(--cream);
+    padding: 14px var(--gutter);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: lowercase;
+    display: flex; justify-content: center; align-items: center;
+    gap: 28px; flex-wrap: wrap;
+  }
+  .bottom-rule .ch { color: var(--chartreuse); }
+  .bottom-rule .pk { color: var(--hot-pink); }
+
+  /* REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(36px);
+    transition: opacity 0.95s cubic-bezier(.2,.6,.1,1), transform 0.95s cubic-bezier(.2,.6,.1,1);
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+  .reveal.r2 { transform: translateY(-36px); }
+  .reveal.r2.in { transform: translateY(0); }
+  .reveal.scale { transform: scale(0.92); }
+  .reveal.scale.in { transform: scale(1); }
+  .d1 { transition-delay: 0.07s; }
+  .d2 { transition-delay: 0.14s; }
+  .d3 { transition-delay: 0.21s; }
+  .d4 { transition-delay: 0.28s; }
+  .d5 { transition-delay: 0.35s; }
+  .d6 { transition-delay: 0.42s; }
+  .d7 { transition-delay: 0.49s; }
+
+  /* stagger reveal for card grids */
+  .cards .card { opacity: 0; transform: translateY(40px) rotate(-1deg); transition: opacity 0.7s, transform 0.7s; }
+  .cards.in .card { opacity: 1; transform: translateY(0) rotate(0); }
+  .cards.in .card:nth-child(1)  { transition-delay: 0.05s; }
+  .cards.in .card:nth-child(2)  { transition-delay: 0.10s; }
+  .cards.in .card:nth-child(3)  { transition-delay: 0.15s; }
+  .cards.in .card:nth-child(4)  { transition-delay: 0.20s; }
+  .cards.in .card:nth-child(5)  { transition-delay: 0.25s; }
+  .cards.in .card:nth-child(6)  { transition-delay: 0.30s; }
+  .cards.in .card:nth-child(7)  { transition-delay: 0.35s; }
+  .cards.in .card:nth-child(8)  { transition-delay: 0.40s; }
+  .cards.in .card:nth-child(9)  { transition-delay: 0.45s; }
+  .cards.in .card:nth-child(10) { transition-delay: 0.50s; }
+
+  @media print {
+    body::before, .cursor, .trail { display: none; }
+    body { cursor: auto; background: #fff; }
+    .marquees, .flow, .manifesto, .tier { background: #fff; color: #000; }
+    .tier .mega { opacity: 0.1; }
+  }
+
+  /* ═════════════ AUDIO · clickable titles ═════════════ */
+  [data-audio] {
+    cursor: pointer;
+    transition: color 0.2s, text-shadow 0.25s, transform 0.25s;
+    position: relative;
+  }
+  [data-audio]::before {
+    content: "▷";
+    display: inline-block;
+    margin-right: 0.32em;
+    font-family: var(--font-mono);
+    font-size: 0.55em;
+    color: var(--hot-pink);
+    transform: translateY(-0.15em);
+    opacity: 0.55;
+    transition: transform 0.25s, opacity 0.25s;
+  }
+  [data-audio]:hover::before { opacity: 1; transform: translateY(-0.15em) scale(1.3); }
+  [data-audio].playing::before {
+    content: "▶";
+    color: var(--chartreuse);
+    opacity: 1;
+    animation: pulse-icon 1.1s ease-in-out infinite;
+  }
+  @keyframes pulse-icon { 50% { transform: translateY(-0.15em) scale(1.18); } }
+
+  /* card titles: subtler */
+  .card .name[data-audio]::before,
+  .card .name-sub[data-audio]::before {
+    font-size: 0.5em;
+    color: var(--hot-pink);
+    margin-right: 0.4em;
+  }
+  .card .name[data-audio].playing,
+  .card .name-sub[data-audio].playing {
+    color: var(--hot-pink);
+  }
+  .card .name[data-audio].playing::before,
+  .card .name-sub[data-audio].playing::before {
+    color: var(--hot-pink);
+  }
+
+  /* dark/light section overrides */
+  .tier.t1 [data-audio]::before,
+  .flow [data-audio]::before { color: var(--chartreuse); }
+  .tier.t1 [data-audio].playing::before,
+  .flow [data-audio].playing::before { color: var(--chartreuse); }
+  .manifesto [data-audio]::before { color: var(--hot-pink); }
+
+  /* ═════════════ AUDIO toggle button (top strip) ═════════════ */
+  .audio-btn {
+    background: transparent;
+    color: var(--cream);
+    border: 1px solid var(--cream);
+    padding: 4px 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: lowercase;
+    cursor: pointer;
+    transition: all 0.22s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .audio-btn:hover { background: var(--chartreuse); color: var(--ink); border-color: var(--chartreuse); }
+  .audio-btn.on { background: var(--chartreuse); color: var(--ink); border-color: var(--chartreuse); }
+  .audio-btn .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor;
+    display: inline-block;
+  }
+  .audio-btn.on .dot { background: var(--hot-pink); animation: blink 1.1s steps(2) infinite; }
+
+  /* ═════════════ NOW PLAYING chip ═════════════ */
+  .now-playing {
+    position: fixed;
+    bottom: 24px; left: 24px;
+    z-index: 300;
+    background: var(--ink);
+    color: var(--chartreuse);
+    padding: 12px 18px 12px 14px;
+    display: flex; align-items: center;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: lowercase;
+    border: 1px solid var(--chartreuse);
+    max-width: 380px;
+    transform: translateX(calc(-100% - 28px));
+    transition: transform 0.45s cubic-bezier(.2,.6,.1,1);
+    pointer-events: auto;
+  }
+  .now-playing.on { transform: translateX(0); }
+  .now-playing .bars {
+    display: inline-flex; align-items: end; gap: 2px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+  .now-playing .bars span {
+    width: 3px; background: var(--chartreuse);
+    animation: eq 0.9s ease-in-out infinite;
+    transform-origin: bottom;
+  }
+  .now-playing .bars span:nth-child(1) { height: 60%; animation-delay: 0s; }
+  .now-playing .bars span:nth-child(2) { height: 100%; animation-delay: 0.2s; }
+  .now-playing .bars span:nth-child(3) { height: 70%; animation-delay: 0.4s; }
+  .now-playing .bars span:nth-child(4) { height: 90%; animation-delay: 0.1s; }
+  @keyframes eq {
+    0%, 100% { transform: scaleY(0.4); }
+    50%      { transform: scaleY(1); }
+  }
+  .now-playing .label {
+    flex: 1;
+    color: var(--cream);
+    line-height: 1.3;
+  }
+  .now-playing .label b {
+    display: block;
+    color: var(--chartreuse);
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .now-playing .close {
+    background: transparent;
+    border: none;
+    color: var(--hot-pink);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    padding: 0 2px;
+    line-height: 1;
+  }
+  @media (max-width: 560px) {
+    .now-playing { left: 12px; right: 12px; bottom: 12px; }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="trail" id="t1"></div>
+<div class="trail" id="t2"></div>
+<div class="trail" id="t3"></div>
+
+<!-- floating decorative type specimens -->
+<div class="floating-spec" style="top: 22vh; right: 4vw; font-size: 240px; transform: rotate(8deg);">∞</div>
+<div class="floating-spec" style="bottom: 28vh; left: -2vw; font-size: 360px; transform: rotate(-6deg); opacity: 0.04;">Q</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TOP STRIP
+═════════════════════════════════════════════════════════════════ -->
+<div class="top-strip">
+  <span><span class="ch blink">●</span> volume iii · the kinetic field guide</span>
+  <span class="cy">ayass bioscience · bureau of causal engineering</span>
+  <span style="display: inline-flex; align-items: center; gap: 14px;">
+    <span>set in <em>bodoni moda</em> · unbounded · lora</span>
+    <button class="audio-btn" id="audioBtn" type="button" aria-pressed="false" title="Toggle audio narration">
+      <span class="dot"></span><span id="audioBtnLabel">audio · off</span>
+    </button>
+  </span>
+</div>
+
+<audio id="player" preload="auto"></audio>
+
+<div class="now-playing" id="nowPlay" role="status" aria-live="polite">
+  <span class="bars"><span></span><span></span><span></span><span></span></span>
+  <span class="label"><b>now playing</b><span id="npLabel">—</span></span>
+  <button class="close" id="npClose" type="button" aria-label="Stop">×</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MULTI-LANE MARQUEE
+═════════════════════════════════════════════════════════════════ -->
+<div class="marquees">
+  <div class="marquee-lane l1">
+    <div class="track">
+      <span><span class="star">twenty-five modules</span><span class="star">eight causal engines</span><span class="star">three stacked tiers</span><span class="star">one reasoning engine</span><span class="star">source-linked outputs</span></span>
+      <span aria-hidden="true"><span class="star">twenty-five modules</span><span class="star">eight causal engines</span><span class="star">three stacked tiers</span><span class="star">one reasoning engine</span><span class="star">source-linked outputs</span></span>
+    </div>
+  </div>
+  <div class="marquee-lane l2">
+    <div class="track">
+      <span><span class="star">CAUSION ◊ NATURAL LANGUAGE</span><span class="star">FASTQ → DOSSIER</span><span class="star">FDA-ALIGNED EVIDENCE</span><span class="star">ZERO BLACK BOXES</span><span class="star">UPSTREAM OF THE FIELD</span></span>
+      <span aria-hidden="true"><span class="star">CAUSION ◊ NATURAL LANGUAGE</span><span class="star">FASTQ → DOSSIER</span><span class="star">FDA-ALIGNED EVIDENCE</span><span class="star">ZERO BLACK BOXES</span><span class="star">UPSTREAM OF THE FIELD</span></span>
+    </div>
+  </div>
+  <div class="marquee-lane l3">
+    <div class="track">
+      <span><span class="star">t1 · causal · 08</span><span class="star">t2 · core · 10</span><span class="star">t3 · data · 07</span><span class="star">causal confidence scoring</span><span class="star">tier 1 driver · tier 2 strong · tier 3 candidate</span></span>
+      <span aria-hidden="true"><span class="star">t1 · causal · 08</span><span class="star">t2 · core · 10</span><span class="star">t3 · data · 07</span><span class="star">causal confidence scoring</span><span class="star">tier 1 driver · tier 2 strong · tier 3 candidate</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     COVER · MANDALA POSTER
+═════════════════════════════════════════════════════════════════ -->
+<header class="cover">
+  <div class="cover-inner">
+    <div class="cover-meta-row reveal">
+      <div><span class="ch">⧊</span> field guide · volume iii · the kinetic edition</div>
+      <div class="right">edition mmxxvi · 17·05 · confidential / investor use</div>
+    </div>
+
+    <div>
+      <h1 class="cover-headline" data-audio="overview" data-audio-src="audio/overview.mp3" data-label="Platform Overview · BiRAGAS at a glance">
+        <span class="line reveal">Causal</span>
+        <span class="line ital-thin reveal d1">Atlas</span>
+        <span class="line reveal d2"><span class="splash">of</span> 25</span>
+        <span class="line reveal d3"><span class="chunk">Modules</span></span>
+        <span class="vol reveal d4">— a kinetic field guide for the patient capital —</span>
+      </h1>
+      <p class="cover-deck reveal d4">
+        The BiRAGAS reasoning engine, mapped as a moving atlas. Twenty-five modules in three orbiting tiers. Eight causal engines at the centre. One natural-language agent. Read it like a poster.
+      </p>
+    </div>
+
+    <!-- MANDALA -->
+    <div class="mandala-wrap reveal scale d2">
+      <svg viewBox="-300 -300 600 600" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <path id="ring-outer" d="M 0,-260 A 260,260 0 1,1 -0.01,-260" fill="none"/>
+          <path id="ring-mid"   d="M 0,-180 A 180,180 0 1,1 -0.01,-180" fill="none"/>
+          <path id="ring-inner" d="M 0,-110 A 110,110 0 1,1 -0.01,-110" fill="none"/>
+        </defs>
+
+        <!-- outer pulse circle -->
+        <g class="mandala-pulse">
+          <circle r="285" fill="none" stroke="#3D0E40" stroke-width="0.6" stroke-dasharray="2 6"/>
+          <circle r="270" fill="none" stroke="#3D0E40" stroke-width="0.4"/>
+        </g>
+
+        <!-- OUTER RING (T2 - 10 modules) -->
+        <g class="mandala-ring">
+          <circle r="260" fill="none" stroke="#3D0E40" stroke-width="1"/>
+          <text font-family="Bodoni Moda" font-style="italic" font-size="18" fill="#3D0E40" letter-spacing="3">
+            <textPath href="#ring-outer" startOffset="0%">
+              T2 · DECONVOLUTION ◊ DEG ANALYSIS ◊ GENE PRIORITIZATION ◊ GSEA ENRICHMENT ◊ MULTI-OMICS ◊ PATHWAY ENRICHMENT ◊ SINGLE-CELL ◊ TEMPORAL BULK ◊ TEMPORAL GRANGER ◊ TOTAL RNA PIPELINE ◊
+            </textPath>
+          </text>
+        </g>
+
+        <!-- MID RING (T1 - 8 engines) -->
+        <g class="mandala-ring inner">
+          <circle r="180" fill="none" stroke="#FF3D7F" stroke-width="1.5"/>
+          <text font-family="Bodoni Moda" font-style="italic" font-weight="500" font-size="17" fill="#FF3D7F" letter-spacing="2">
+            <textPath href="#ring-mid" startOffset="0%">
+              T1 ◊ CAUSAL CALCULUS ◊ CAUSAL DAG BUILDER ◊ CAUSALITY ◊ CENTRALITY ◊ GWAS · MR ◊ PERTURBATION PATIENT ◊ PERTURBATION POPULATION ◊ SIGNOR ◊
+            </textPath>
+          </text>
+        </g>
+
+        <!-- INNER RING (T3 - 7 modules) -->
+        <g class="mandala-ring">
+          <circle r="110" fill="none" stroke="#00D4E1" stroke-width="1"/>
+          <text font-family="Major Mono Display" font-size="11" fill="#00D4E1" letter-spacing="2">
+            <textPath href="#ring-inner" startOffset="0%">
+              T3 ◊ COHORT ◊ PERTURB-SEQ ◊ SCREENING ◊ AMPLICON ◊ HARMONIZATION ◊ FASTQ ◊ PERTURBATION ◊
+            </textPath>
+          </text>
+        </g>
+
+        <!-- center -->
+        <g class="mandala-pulse">
+          <circle r="56" fill="#3D0E40"/>
+          <circle r="46" fill="none" stroke="#D9F25C" stroke-width="1.5"/>
+          <text x="0" y="-2" text-anchor="middle" font-family="Bodoni Moda" font-style="italic" font-size="22" fill="#D9F25C" font-weight="500">causion</text>
+          <text x="0" y="16" text-anchor="middle" font-family="Major Mono Display" font-size="8" fill="#D9F25C" letter-spacing="2">agent · 01</text>
+        </g>
+
+        <!-- compass marks -->
+        <g stroke="#0A0A0A" stroke-width="0.8">
+          <line x1="0" y1="-298" x2="0" y2="-285"/>
+          <line x1="0" y1="285" x2="0" y2="298"/>
+          <line x1="-298" y1="0" x2="-285" y2="0"/>
+          <line x1="285" y1="0" x2="298" y2="0"/>
+        </g>
+        <text x="0" y="-302" text-anchor="middle" font-family="Major Mono Display" font-size="9" fill="#0A0A0A" letter-spacing="3">N</text>
+        <text x="0" y="312" text-anchor="middle" font-family="Major Mono Display" font-size="9" fill="#0A0A0A" letter-spacing="3">S</text>
+        <text x="-312" y="3" text-anchor="middle" font-family="Major Mono Display" font-size="9" fill="#0A0A0A" letter-spacing="3">W</text>
+        <text x="312" y="3" text-anchor="middle" font-family="Major Mono Display" font-size="9" fill="#0A0A0A" letter-spacing="3">E</text>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     STATS BAND
+═════════════════════════════════════════════════════════════════ -->
+<section class="stats">
+  <div class="item reveal"><div class="k counter" data-target="25">0</div><div class="v">modules · deployed</div></div>
+  <div class="item reveal d1"><div class="k counter" data-target="8">0</div><div class="v">causal engines · T1</div></div>
+  <div class="item reveal d2"><div class="k counter" data-target="3">0</div><div class="v">stacked tiers</div></div>
+  <div class="item reveal d3"><div class="k counter" data-target="1">0</div><div class="v">reasoning engine</div></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     CAUSION POSTER
+═════════════════════════════════════════════════════════════════ -->
+<section class="causion-poster">
+  <div class="eyebrow reveal">the agent layer · natural language · all 25 modules</div>
+  <h2 class="reveal d1" data-audio="causion" data-audio-src="audio/causion.mp3" data-label="The Causion agent · natural-language access">Ask <span class="acc">Causion.</span></h2>
+  <p class="deck reveal d2">
+    Most omics tools require a bioinformatician to drive them. BiRAGAS doesn't. <b>Causion</b> is the natural-language agent at the front of the stack — a scientist types a question, Causion classifies intent, routes to the correct module(s), configures parameters, and returns source-linked outputs with a full audit trail.
+  </p>
+  <div class="ask-bar reveal d3">
+    <span class="typer" id="typer">Find DEGs between healthy and diseased samples.</span>
+  </div>
+  <div class="causion-flow reveal d4">
+    <div class="step"><span class="n">01 / INPUT</span><strong>Question</strong>plain English ask</div>
+    <div class="step"><span class="n">02 / ROUTE</span><strong>Causion</strong>module selection + config</div>
+    <div class="step"><span class="n">03 / EXECUTE</span><strong>Engine</strong>T1 / T2 / T3 pipeline</div>
+    <div class="step"><span class="n">04 / OUTPUT</span><strong>Dossier</strong>source-linked + audit</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TIER 01 POSTER
+═════════════════════════════════════════════════════════════════ -->
+<section class="tier t1" id="t1">
+  <div class="mega">T·01</div>
+  <div class="tier-head">
+    <div>
+      <div class="label"><span class="badge">1</span>tier one · the flagship causal stack · the moat</div>
+      <h2 data-audio="t1" data-audio-src="audio/t1.mp3" data-label="Tier 1 · the flagship causal stack">Beyond <span class="ital">correlation.</span></h2>
+    </div>
+    <div class="right-meta">§03 · 08 engines<br>causal · MR · in-silico</div>
+  </div>
+  <p class="deck reveal">
+    Eight engines built specifically for <b>causal inference, Mendelian randomization, in-silico perturbation, and DAG construction</b> — the exact evidence FDA increasingly requires for therapeutic claims. This is the moat.
+  </p>
+  <div class="cards" data-stagger>
+
+    <article class="card">
+      <div class="badge">⌗</div>
+      <div class="num">01</div>
+      <div class="name" data-audio="causal_calculus" data-audio-src="audio/modules/causal_calculus.mp3" data-label="T1·01 · Causal Calculus">Causal Calculus</div>
+      <div class="name-sub" data-audio="causal_calculus" data-audio-src="audio/modules/causal_calculus.mp3" data-label="T1·01 · Causal Calculus">interventional DAG operator</div>
+      <div class="spec">
+        <div class="row"><span class="k">assay</span><span class="v">causal model + data layer</span></div>
+        <div class="row"><span class="k">method</span><span class="v">interventional calculus on a DAG</span></div>
+      </div>
+      <div class="func">Apply causal calculus rules to a DAG context.</div>
+      <div class="scope-tag">standalone</div>
+    </article>
+
+    <article class="card">
+      <div class="badge">⌗</div>
+      <div class="num">02</div>
+      <div class="name" data-audio="causal_dag_builder" data-audio-src="audio/modules/causal_dag_builder.mp3" data-label="T1·02 · Causal DAG Builder">DAG Builder</div>
+      <div class="name-sub" data-audio="causal_dag_builder" data-audio-src="audio/modules/causal_dag_builder.mp3" data-label="T1·02 · Causal DAG Builder">graph structure learning</div>
+      <div class="spec">
+        <div class="row"><span class="k">assay</span><span class="v">omics + traits + (opt) MR edges</span></div>
+        <div class="row"><span class="k">method</span><span class="v">structure learning / constraints</span></div>
+      </div>
+      <div class="func">Build a causal DAG seed from pathway and omics evidence.</div>
+      <div class="scope-tag">standalone</div>
+    </article>
+
+    <article class="card">
+      <div class="badge">⌗</div>
+      <div class="num">03</div>
+      <div class="name" data-audio="causality" data-audio-src="audio/modules/causality.mp3" data-label="T1·03 · Causality">Causality</div>
+      <div class="name-sub" data-audio="causality" data-audio-src="audio/modules/causality.mp3" data-label="T1·03 · Causality">effect decomposition</div>
+      <div class="spec">
+        <div class="row"><span class="k">assay</span><span class="v">multi-omics + traits</span></div>
+        <div class="row"><span class="k">method</span><span class="v">causal discovery + decomposition</span></div>
+      </div>
+      <div class="func">Execute configured causality analytics on upstream graphs.</div>
+      <div class="scope-tag">standalone</div>
+    </article>
+
+    <article class="card">
+      <div class="badge">⌗</div>
+      <div class="num">04</div>
+      <div class="name" data-audio="centrality_calculator" data-audio-src="audio/modules/centrality_calculator.mp3" data-label="T1·04 · Centrality Calculator">Centrality</div>
+      <div class="name-sub" data-audio="centrality_calculator" data-audio-src="audio/modules/centrality_calculator.mp3" data-label="T1·04 · Centrality Calculator">network bottlenecks</div>
+      <div class="spec">
+        <div class="row"><span class="k">assay</span><span class="v">PPI · GRN · pathway graph</span></div>
+        <div class="row"><span class="k">method</span><span class="v">centrality + bottleneck metrics</span></div>
+      </div>
+      <div class="func">Rank nodes by centrality in a causal graph.</div>
+      <div class="scope-tag">standalone</div>
+    </article>
+
+    <article class="card">
+      <div class="badge">⌗</div>
+      <div class="num">05</div>
+      <div class="name" data-audio="gwas_mendelian_randomization" data-audio-src="audio/modules/gwas_mendelian_randomization.mp3" data-label="T1·05 · GWAS / Mendelian Randomization">GWAS · MR</div>
+      <div class="name-sub" data-audio="gwas_mendelian_randomization" data-audio-src="audio/modules/gwas_mendelian_randomization.mp3" data-label="T1·05 · GWAS / Mendelian Randomization">mendelian randomization</div>
+      <div class="spec">
+        <div class="row"><span class="k">assay</span><span class="v">GWAS + LD-matched stats</span></div>
+        <div class="row"><span class="k">method</span><span class="v">two-sample MR · IVW · sensitivity</span></div>
+      </div>
+      <div class="func">Integrate GWAS summary statistics with expression layers.</div>
+      <div class="scope-tag">multi</div>
+    </article>
+
+    <article class="card">
+      <div class="badge">⌗</div>
+      <div class="num">06</div>
+      <div class="name" data-audio="in_silico_perturbation_patient" data-audio-src="audio/modules/in_silico_perturbation_patient.mp3" data-label="T1·06 · In-silico Perturbation · Patient">Perturbation · Patient</div>
+      <div class="name-sub" data-audio="in_silico_perturbation_patient" data-audio-src="audio/modules/in_silico_perturbation_patient.mp3" data-label="T1·06 · In-silico Perturbation · Patient">single-patient counterfactuals</div>
+      <div class="spec">
+        <div class="row"><span class="k">assay</span><span class="v">patient embedding / state model</span></div>
+        <div class="row"><span class="k">method</span><span class="v">single-patient counterfactuals</span></div>
+      </div>
+      <div class="func">Run patient-context in silico perturbations.</div>
+      <div class="scope-tag">standalone</div>
+    </article>
+
+    <article class="card">
+      <div class="badge">⌗</div>
+      <div class="num">07</div>
+      <div class="name" data-audio="in_silico_perturbation_population" data-audio-src="audio/modules/in_silico_perturbation_population.mp3" data-label="T1·07 · In-silico Perturbation · Population">Perturbation · Population</div>
+      <div class="name-sub" data-audio="in_silico_perturbation_population" data-audio-src="audio/modules/in_silico_perturbation_population.mp3" data-label="T1·07 · In-silico Perturbation · Population">KO / activation simulation</div>
+      <div class="spec">
+        <div class="row"><span class="k">assay</span><span class="v">pseudobulk · cohort-level</span></div>
+        <div class="row"><span class="k">method</span><span class="v">KO / activation simulation</span></div>
+      </div>
+      <div class="func">Run population-level in silico perturbations.</div>
+      <div class="scope-tag">standalone</div>
+    </article>
+
+    <article class="card">
+      <div class="badge">⌗</div>
+      <div class="num">08</div>
+      <div class="name" data-audio="signor_causality" data-audio-src="audio/modules/signor_causality.mp3" data-label="T1·08 · SIGNOR Causality">SIGNOR</div>
+      <div class="name-sub" data-audio="signor_causality" data-audio-src="audio/modules/signor_causality.mp3" data-label="T1·08 · SIGNOR Causality">literature-anchored</div>
+      <div class="spec">
+        <div class="row"><span class="k">assay</span><span class="v">priors + (opt) gene lists</span></div>
+        <div class="row"><span class="k">method</span><span class="v">literature path models</span></div>
+      </div>
+      <div class="func">Map directed causal edges for a gene set.</div>
+      <div class="scope-tag">multi</div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TIER 02 POSTER
+═════════════════════════════════════════════════════════════════ -->
+<section class="tier t2" id="t2">
+  <div class="mega">T·02</div>
+  <div class="tier-head">
+    <div>
+      <div class="label"><span class="badge">2</span>tier two · the workhorse · commercial entry</div>
+      <h2 data-audio="t2" data-audio-src="audio/t2.mp3" data-label="Tier 2 · the workhorse · ten workflows">Ten <span class="ital">production</span> workflows.</h2>
+    </div>
+    <div class="right-meta">§04 · 10 workflows<br>DEG · GSEA · sc · multi-omics</div>
+  </div>
+  <p class="deck reveal">
+    The analytical bedrock. Bulk + single-cell expression, pathway enrichment, multi-omics, gene prioritization, temporal modeling — including a full <b>Total RNA pipeline</b> from Salmon quant to ML, in one call. This is the commercial entry point.
+  </p>
+  <div class="cards" data-stagger>
+
+    <article class="card"><div class="badge">⌗</div><div class="num">01</div><div class="name" data-audio="deconvolution" data-audio-src="audio/modules/deconvolution.mp3" data-label="T2·01 · Deconvolution">Deconvolution</div><div class="name-sub" data-audio="deconvolution" data-audio-src="audio/modules/deconvolution.mp3" data-label="T2·01 · Deconvolution">mixed-tissue resolver</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">bulk RNA-seq (mixed tissue)</span></div><div class="row"><span class="k">method</span><span class="v">reference-based deconvolution</span></div></div>
+      <div class="func">Deconvolve immune cell types in tumor samples.</div><div class="scope-tag">multi</div>
+    </article>
+    <article class="card"><div class="badge">⌗</div><div class="num">02</div><div class="name" data-audio="deg_analysis" data-audio-src="audio/modules/deg_analysis.mp3" data-label="T2·02 · DEG Analysis">DEG Analysis</div><div class="name-sub" data-audio="deg_analysis" data-audio-src="audio/modules/deg_analysis.mp3" data-label="T2·02 · DEG Analysis">DESeq2 · limma-voom</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">bulk RNA-seq</span></div><div class="row"><span class="k">method</span><span class="v">DESeq2 · limma-voom</span></div></div>
+      <div class="func">Find DEGs between healthy and diseased samples.</div><div class="scope-tag">multi</div>
+    </article>
+    <article class="card"><div class="badge">⌗</div><div class="num">03</div><div class="name" data-audio="gene_prioritization" data-audio-src="audio/modules/gene_prioritization.mp3" data-label="T2·03 · Gene Prioritization">Gene Prioritization</div><div class="name-sub" data-audio="gene_prioritization" data-audio-src="audio/modules/gene_prioritization.mp3" data-label="T2·03 · Gene Prioritization">score fusion</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">ranked gene lists</span></div><div class="row"><span class="k">method</span><span class="v">score fusion + network priors</span></div></div>
+      <div class="func">Prioritize genes for drug target discovery.</div><div class="scope-tag">multi</div>
+    </article>
+    <article class="card"><div class="badge">⌗</div><div class="num">04</div><div class="name" data-audio="gsea_pathway_enrichment" data-audio-src="audio/modules/gsea_pathway_enrichment.mp3" data-label="T2·04 · GSEA Pathway Enrichment">GSEA</div><div class="name-sub" data-audio="gsea_pathway_enrichment" data-audio-src="audio/modules/gsea_pathway_enrichment.mp3" data-label="T2·04 · GSEA Pathway Enrichment">preranked enrichment</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">expression ranks</span></div><div class="row"><span class="k">method</span><span class="v">GSEA · preranked</span></div></div>
+      <div class="func">Run GSEA on a ranked gene list.</div><div class="scope-tag">multi</div>
+    </article>
+    <article class="card"><div class="badge">⌗</div><div class="num">05</div><div class="name" data-audio="multi_omics_analysis" data-audio-src="audio/modules/multi_omics_analysis.mp3" data-label="T2·05 · Multi-omics Analysis">Multi-Omics</div><div class="name-sub" data-audio="multi_omics_analysis" data-audio-src="audio/modules/multi_omics_analysis.mp3" data-label="T2·05 · Multi-omics Analysis">block fusion</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">RNA + proteome (+ metabolome)</span></div><div class="row"><span class="k">method</span><span class="v">block fusion + sparse coupling</span></div></div>
+      <div class="func">Integrate multi-omics for holistic biomarker discovery.</div><div class="scope-tag">multi</div>
+    </article>
+    <article class="card"><div class="badge">⌗</div><div class="num">06</div><div class="name" data-audio="pathway_enrichment" data-audio-src="audio/modules/pathway_enrichment.mp3" data-label="T2·06 · Pathway Enrichment">Pathway Enrichment</div><div class="name-sub" data-audio="pathway_enrichment" data-audio-src="audio/modules/pathway_enrichment.mp3" data-label="T2·06 · Pathway Enrichment">topology-aware</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">ranked genes / DE table</span></div><div class="row"><span class="k">method</span><span class="v">over-representation + topology</span></div></div>
+      <div class="func">Compare pathway alterations across diseases.</div><div class="scope-tag">multi</div>
+    </article>
+    <article class="card"><div class="badge">⌗</div><div class="num">07</div><div class="name" data-audio="single_cell_analysis" data-audio-src="audio/modules/single_cell_analysis.mp3" data-label="T2·07 · Single-cell Analysis">Single-Cell</div><div class="name-sub" data-audio="single_cell_analysis" data-audio-src="audio/modules/single_cell_analysis.mp3" data-label="T2·07 · Single-cell Analysis">QC → embedding → typing</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">scRNA-seq (counts)</span></div><div class="row"><span class="k">method</span><span class="v">QC → embedding → cell typing</span></div></div>
+      <div class="func">Cluster single-cell RNA-seq data.</div><div class="scope-tag">multi</div>
+    </article>
+    <article class="card"><div class="badge">⌗</div><div class="num">08</div><div class="name" data-audio="temporal_analysis_bulk" data-audio-src="audio/modules/temporal_analysis_bulk.mp3" data-label="T2·08 · Temporal Analysis · Bulk">Temporal · Bulk</div><div class="name-sub" data-audio="temporal_analysis_bulk" data-audio-src="audio/modules/temporal_analysis_bulk.mp3" data-label="T2·08 · Temporal Analysis · Bulk">dynamic genes</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">time-series expression</span></div><div class="row"><span class="k">method</span><span class="v">differential dynamics + smoothing</span></div></div>
+      <div class="func">Identify genes that change dynamically over time.</div><div class="scope-tag">multi</div>
+    </article>
+    <article class="card"><div class="badge">⌗</div><div class="num">09</div><div class="name" data-audio="temporal_granger_analysis" data-audio-src="audio/modules/temporal_granger_analysis.mp3" data-label="T2·09 · Temporal Granger Analysis">Temporal · Granger</div><div class="name-sub" data-audio="temporal_granger_analysis" data-audio-src="audio/modules/temporal_granger_analysis.mp3" data-label="T2·09 · Temporal Granger Analysis">VAR-style screens</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">multivariate time series</span></div><div class="row"><span class="k">method</span><span class="v">Granger · VAR-style screens</span></div></div>
+      <div class="func">Run temporal Granger with a curated gene list.</div><div class="scope-tag">multi</div>
+    </article>
+    <article class="card"><div class="badge">⌗</div><div class="num">10</div><div class="name" data-audio="total_rna_pipeline" data-audio-src="audio/modules/total_rna_pipeline.mp3" data-label="T2·10 · Total RNA Pipeline">Total RNA Pipeline</div><div class="name-sub" data-audio="total_rna_pipeline" data-audio-src="audio/modules/total_rna_pipeline.mp3" data-label="T2·10 · Total RNA Pipeline">end-to-end Salmon stack</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">bulk RNA-seq (Salmon quant)</span></div><div class="row"><span class="k">method</span><span class="v">tximport → DTU → DE → WGCNA → GSEA → ML</span></div></div>
+      <div class="func">Run full total-RNA pipeline from Salmon *.quant.sf files.</div><div class="scope-tag">multi</div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TIER 03 POSTER
+═════════════════════════════════════════════════════════════════ -->
+<section class="tier t3" id="t3">
+  <div class="mega">T·03</div>
+  <div class="tier-head">
+    <div>
+      <div class="label"><span class="badge">3</span>tier three · the foundation · integration lock-in</div>
+      <h2 data-audio="t3" data-audio-src="audio/t3.mp3" data-label="Tier 3 · the foundation · data + processing">Where the <span class="ital">data</span> enters.</h2>
+    </div>
+    <div class="right-meta">§05 · 07 modules<br>FASTQ · CRISPR · harmonization</div>
+  </div>
+  <p class="deck reveal">
+    Ingest + preprocessing. FASTQ alignment, ComBat harmonization, federated cohort retrieval, and the full <b>CRISPR suite</b>. Once a partner's raw data, harmonized cohorts, and validation libraries live inside BiRAGAS, switching costs compound through their regulatory filings.
+  </p>
+  <div class="cards" data-stagger>
+
+    <article class="card"><div class="badge">⌗</div><div class="num">01</div><div class="name" data-audio="cohort_retrieval" data-audio-src="audio/modules/cohort_retrieval.mp3" data-label="T3·01 · Cohort Retrieval">Cohort Retrieval</div><div class="name-sub" data-audio="cohort_retrieval" data-audio-src="audio/modules/cohort_retrieval.mp3" data-label="T3·01 · Cohort Retrieval">federated query</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">cohort + omics (mixed)</span></div><div class="row"><span class="k">method</span><span class="v">federated / warehouse query</span></div></div>
+      <div class="func">Retrieve patient data for disease X.</div><div class="scope-tag">multi</div>
+    </article>
+    <article class="card"><div class="badge">⌗</div><div class="num">02</div><div class="name" data-audio="crispr_perturb_seq" data-audio-src="audio/modules/crispr_perturb_seq.mp3" data-label="T3·02 · CRISPR Perturb-seq">CRISPR · Perturb-seq</div><div class="name-sub" data-audio="crispr_perturb_seq" data-audio-src="audio/modules/crispr_perturb_seq.mp3" data-label="T3·02 · CRISPR Perturb-seq">single-cell perturbation</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">scRNA with perturbations</span></div><div class="row"><span class="k">method</span><span class="v">differential + program discovery</span></div></div>
+      <div class="func">Analyze Perturb-seq with guide RNAs and scRNA-seq.</div><div class="scope-tag">multi</div>
+    </article>
+    <article class="card"><div class="badge">⌗</div><div class="num">03</div><div class="name" data-audio="crispr_screening" data-audio-src="audio/modules/crispr_screening.mp3" data-label="T3·03 · CRISPR Screening">CRISPR · Screening</div><div class="name-sub" data-audio="crispr_screening" data-audio-src="audio/modules/crispr_screening.mp3" data-label="T3·03 · CRISPR Screening">pooled hit calling</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">pooled screens (viability)</span></div><div class="row"><span class="k">method</span><span class="v">normalization + hit calling</span></div></div>
+      <div class="func">Run DNA CRISPR pooled data — screening effects.</div><div class="scope-tag">multi</div>
+    </article>
+    <article class="card"><div class="badge">⌗</div><div class="num">04</div><div class="name" data-audio="crispr_targeted_amplicon" data-audio-src="audio/modules/crispr_targeted_amplicon.mp3" data-label="T3·04 · CRISPR Targeted / Amplicon">CRISPR · Amplicon</div><div class="name-sub" data-audio="crispr_targeted_amplicon" data-audio-src="audio/modules/crispr_targeted_amplicon.mp3" data-label="T3·04 · CRISPR Targeted / Amplicon">targeted validation</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">targeted CRISPR validation</span></div><div class="row"><span class="k">method</span><span class="v">paired end-point / growth</span></div></div>
+      <div class="func">Analyze amplicon-seq data for genome edits.</div><div class="scope-tag">multi</div>
+    </article>
+    <article class="card"><div class="badge">⌗</div><div class="num">05</div><div class="name" data-audio="data_harmonization" data-audio-src="audio/modules/data_harmonization.mp3" data-label="T3·05 · Data Harmonization">Harmonization</div><div class="name-sub" data-audio="data_harmonization" data-audio-src="audio/modules/data_harmonization.mp3" data-label="T3·05 · Data Harmonization">cross-platform</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">multi-study tables</span></div><div class="row"><span class="k">method</span><span class="v">ComBat / harmonization</span></div></div>
+      <div class="func">Harmonize RNA-seq across different platforms.</div><div class="scope-tag">multi</div>
+    </article>
+    <article class="card"><div class="badge">⌗</div><div class="num">06</div><div class="name" data-audio="fastq_processing" data-audio-src="audio/modules/fastq_processing.mp3" data-label="T3·06 · FASTQ Processing">FASTQ Processing</div><div class="name-sub" data-audio="fastq_processing" data-audio-src="audio/modules/fastq_processing.mp3" data-label="T3·06 · FASTQ Processing">alignment + quant</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">sequencing reads (FASTQ)</span></div><div class="row"><span class="k">method</span><span class="v">alignment + quant pipeline</span></div></div>
+      <div class="func">Quality control and process FASTQ files.</div><div class="scope-tag">multi</div>
+    </article>
+    <article class="card"><div class="badge">⌗</div><div class="num">07</div><div class="name" data-audio="perturbation_analysis" data-audio-src="audio/modules/perturbation_analysis.mp3" data-label="T3·07 · Perturbation Analysis">Perturbation Analysis</div><div class="name-sub" data-audio="perturbation_analysis" data-audio-src="audio/modules/perturbation_analysis.mp3" data-label="T3·07 · Perturbation Analysis">knockout effects</div>
+      <div class="spec"><div class="row"><span class="k">assay</span><span class="v">perturb-seq / targeted screens</span></div><div class="row"><span class="k">method</span><span class="v">perturbation differential models</span></div></div>
+      <div class="func">Analyze CRISPR knockout effects on gene expression.</div><div class="scope-tag">multi</div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     FLOW POSTER · animated path
+═════════════════════════════════════════════════════════════════ -->
+<section class="flow" id="flow">
+  <div class="eyebrow reveal">§06 · the chained pipeline</div>
+  <h2 class="reveal d1" data-audio="workflow" data-audio-src="audio/workflow.mp3" data-label="End-to-end · FASTQ → FDA-ready dossier"><span class="acc">FASTQ</span> → FDA-ready<br><span class="pink">causal target dossier.</span></h2>
+  <p style="max-width: 70ch; font-family: var(--font-body); font-size: clamp(17px, 1.4vw, 21px); line-height: 1.6; color: #ddd;" class="reveal d2">
+    The chained pipeline is what makes BiRAGAS different from a stack of point tools. T3 ingests, T2 analyzes, T1 validates causally. Every step auditable. Every output source-linked.
+  </p>
+
+  <div class="flow-svg-wrap reveal d3" id="flowwrap">
+    <svg viewBox="0 0 1600 280" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#D9F25C"/>
+        </marker>
+      </defs>
+      <!-- main path -->
+      <path class="flow-path" id="flowpath"
+            d="M 60 140 C 200 60, 340 220, 480 140 S 760 60, 900 140 S 1180 220, 1320 140 L 1540 140"
+            fill="none" stroke="#D9F25C" stroke-width="2"
+            marker-end="url(#arrow)"/>
+
+      <!-- nodes -->
+      <g font-family="Major Mono Display" font-size="11" fill="#D9F25C" letter-spacing="2">
+        <g transform="translate(60,140)">
+          <circle r="14" fill="none" stroke="#D9F25C" stroke-width="1.5"/>
+          <text y="-28" text-anchor="middle">01</text>
+          <text y="50" text-anchor="middle" font-family="Bodoni Moda" font-style="italic" font-size="18" fill="#F5EFE0">FASTQ</text>
+          <text y="72" text-anchor="middle" font-size="9" fill="#FF3D7F">T3·006</text>
+        </g>
+        <g transform="translate(280,140)">
+          <circle r="14" fill="none" stroke="#D9F25C" stroke-width="1.5"/>
+          <text y="-28" text-anchor="middle">02</text>
+          <text y="50" text-anchor="middle" font-family="Bodoni Moda" font-style="italic" font-size="18" fill="#F5EFE0">harmonize</text>
+          <text y="72" text-anchor="middle" font-size="9" fill="#FF3D7F">T3·005</text>
+        </g>
+        <g transform="translate(500,140)">
+          <circle r="14" fill="none" stroke="#D9F25C" stroke-width="1.5"/>
+          <text y="-28" text-anchor="middle">03</text>
+          <text y="50" text-anchor="middle" font-family="Bodoni Moda" font-style="italic" font-size="18" fill="#F5EFE0">DEG</text>
+          <text y="72" text-anchor="middle" font-size="9" fill="#FF3D7F">T2·002</text>
+        </g>
+        <g transform="translate(720,140)">
+          <circle r="14" fill="none" stroke="#D9F25C" stroke-width="1.5"/>
+          <text y="-28" text-anchor="middle">04</text>
+          <text y="50" text-anchor="middle" font-family="Bodoni Moda" font-style="italic" font-size="18" fill="#F5EFE0">pathway</text>
+          <text y="72" text-anchor="middle" font-size="9" fill="#FF3D7F">T2·004·006</text>
+        </g>
+        <g transform="translate(920,140)">
+          <circle r="14" fill="none" stroke="#D9F25C" stroke-width="1.5"/>
+          <text y="-28" text-anchor="middle">05</text>
+          <text y="50" text-anchor="middle" font-family="Bodoni Moda" font-style="italic" font-size="18" fill="#F5EFE0">prioritize</text>
+          <text y="72" text-anchor="middle" font-size="9" fill="#FF3D7F">T2·003</text>
+        </g>
+        <g transform="translate(1120,140)">
+          <circle r="14" fill="none" stroke="#D9F25C" stroke-width="1.5"/>
+          <text y="-28" text-anchor="middle">06</text>
+          <text y="50" text-anchor="middle" font-family="Bodoni Moda" font-style="italic" font-size="18" fill="#F5EFE0">causal DAG</text>
+          <text y="72" text-anchor="middle" font-size="9" fill="#FF3D7F">T1·002 + 005</text>
+        </g>
+        <g transform="translate(1320,140)">
+          <circle r="14" fill="none" stroke="#D9F25C" stroke-width="1.5"/>
+          <text y="-28" text-anchor="middle">07</text>
+          <text y="50" text-anchor="middle" font-family="Bodoni Moda" font-style="italic" font-size="18" fill="#F5EFE0">perturb</text>
+          <text y="72" text-anchor="middle" font-size="9" fill="#FF3D7F">T1·006·007</text>
+        </g>
+        <g transform="translate(1520,140)">
+          <circle r="16" fill="#FF3D7F"/>
+          <circle r="22" fill="none" stroke="#FF3D7F" stroke-width="1" stroke-dasharray="2 3"/>
+          <text y="-32" text-anchor="middle">08</text>
+          <text y="55" text-anchor="middle" font-family="Bodoni Moda" font-style="italic" font-weight="600" font-size="20" fill="#FF3D7F">dossier</text>
+          <text y="76" text-anchor="middle" font-size="9" fill="#D9F25C">→ FDA</text>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <p style="margin-top: 50px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.18em; color: var(--chartreuse);" class="reveal d4">
+    ◊ output · ranked causal targets + complete regulatory-grade evidence package ◊
+  </p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MANIFESTO POSTER
+═════════════════════════════════════════════════════════════════ -->
+<section class="manifesto">
+  <div class="small reveal">end of volume iii · the field guide</div>
+  <h2 class="reveal d1" data-audio="thesis" data-audio-src="audio/thesis.mp3" data-label="The investor thesis · the manifesto">We're not building<br>another <span class="strike">AI</span>.</h2>
+  <h2 class="next reveal d2" data-audio="thesis" data-audio-src="audio/thesis.mp3" data-label="The investor thesis · the manifesto">We're building the <span class="mul">infrastructure</span></h2>
+  <h2 class="reveal d3" style="font-style: italic; font-size: clamp(28px, 4.5vw, 78px);" data-audio="thesis" data-audio-src="audio/thesis.mp3" data-label="The investor thesis · the manifesto">that finally tells biology's actual story<span class="period"></span></h2>
+  <div class="tag reveal d4">birasys · ayass bioscience · mmxxvi · ◊ ◊ ◊</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     COLOPHON
+═════════════════════════════════════════════════════════════════ -->
+<footer class="colophon">
+  <div>
+    <h4>colophon.</h4>
+    Set in <a href="https://fonts.google.com/specimen/Bodoni+Moda" target="_blank" rel="noopener">Bodoni Moda</a> (display + italic, variable opsz 6–96, weight 400–900), <a href="https://fonts.google.com/specimen/Unbounded" target="_blank" rel="noopener">Unbounded</a> (chunky display), <a href="https://fonts.google.com/specimen/Lora" target="_blank" rel="noopener">Lora</a> (body), and <a href="https://fonts.google.com/specimen/Major+Mono+Display" target="_blank" rel="noopener">Major Mono Display</a> (ornaments). Mandala drawn in inline SVG with textPath circles. Paper grain: SVG fractal noise, multiplied at 28%.
+  </div>
+  <div>
+    <h4>companion.</h4>
+    <a href="https://mayasss-gif.github.io/BiRAGAS-Investor-Pitch-Guide-v2/" target="_blank" rel="noopener">Investor Pitch Guide v2</a><br>
+    <a href="https://mayasss-gif.github.io/BiRAGAS-Investors-Technical-Playbook/" target="_blank" rel="noopener">Technical Playbook (standard)</a><br>
+    <a href="https://mayasss-gif.github.io/BiRAGAS-Investors-Elevator-Pitch/" target="_blank" rel="noopener">Elevator Pitch · Q&amp;A</a><br>
+    <a href="https://mayasss-gif.github.io/BiRAGAS-Editorial-Issue-01/" target="_blank" rel="noopener">Editorial Issue 01 (maximalist)</a>
+  </div>
+  <div>
+    <h4>address.</h4>
+    ayass bioscience, l.l.c.<br>
+    frisco, texas · united states<br>
+    confidential · investor use only.
+  </div>
+</footer>
+
+<div class="bottom-rule">
+  <span><span class="ch">⧊</span> birasys</span>
+  <span class="pk">causal atlas · vol. iii</span>
+  <span>kinetic field guide · mmxxvi</span>
+  <span class="ch">⧊ ◊ ⧊</span>
+</div>
+
+<script>
+  // ── cursor + trail ──
+  const cur = document.getElementById("cur");
+  const trails = [document.getElementById("t1"), document.getElementById("t2"), document.getElementById("t3")];
+  let mx = window.innerWidth/2, my = window.innerHeight/2;
+  const lag = [{x: mx, y: my}, {x: mx, y: my}, {x: mx, y: my}];
+  document.addEventListener("mousemove", e => { mx = e.clientX; my = e.clientY; });
+  function tick() {
+    cur.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
+    [0.18, 0.10, 0.05].forEach((k, i) => {
+      lag[i].x += (mx - lag[i].x) * k;
+      lag[i].y += (my - lag[i].y) * k;
+      trails[i].style.transform = `translate(${lag[i].x}px, ${lag[i].y}px) translate(-50%, -50%)`;
+      trails[i].style.opacity = 0.4 - i * 0.12;
+    });
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  document.querySelectorAll("a, button, .card, .ask-bar, .top-strip, .marquee-lane").forEach(el => {
+    el.addEventListener("mouseenter", () => { cur.style.width = "56px"; cur.style.height = "56px"; });
+    el.addEventListener("mouseleave", () => { cur.style.width = "28px"; cur.style.height = "28px"; });
+  });
+
+  // dark cursor over chartreuse sections
+  const ioCursor = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) cur.classList.add("dark");
+      else cur.classList.remove("dark");
+    });
+  }, { rootMargin: "-40% 0px -40% 0px", threshold: 0 });
+  document.querySelectorAll(".tier.t2, .manifesto").forEach(el => ioCursor.observe(el));
+
+  // ── reveals ──
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("in"); });
+  }, { rootMargin: "-7% 0px", threshold: 0.04 });
+  document.querySelectorAll(".reveal, .cards").forEach(el => io.observe(el));
+  window.addEventListener("load", () => {
+    document.querySelectorAll(".cover .reveal").forEach(el => el.classList.add("in"));
+  });
+
+  // ── stat counters ──
+  const countersIO = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll(".counter").forEach(c => {
+          const target = parseInt(c.dataset.target, 10);
+          const dur = 1400;
+          const start = performance.now();
+          (function step(t) {
+            const p = Math.min(1, (t - start) / dur);
+            const v = Math.round(target * (1 - Math.pow(1 - p, 3)));
+            c.textContent = String(v).padStart(2, "0");
+            if (p < 1) requestAnimationFrame(step);
+          })(start);
+        });
+        countersIO.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll(".stats").forEach(el => countersIO.observe(el));
+
+  // ── ask-bar typer rotation ──
+  const typer = document.getElementById("typer");
+  const prompts = [
+    "Find DEGs between healthy and diseased samples.",
+    "Run a temporal Granger analysis with this gene set.",
+    "Build a causal DAG from these pathway hits.",
+    "Validate this target with Mendelian randomization.",
+    "Perturb FLT3 in silico across the AML cohort.",
+    "Map directed causal edges for these genes."
+  ];
+  let pIdx = 0, cIdx = 0, deleting = false;
+  function typeStep() {
+    const cur = prompts[pIdx];
+    if (!deleting) {
+      cIdx++;
+      typer.textContent = cur.slice(0, cIdx);
+      if (cIdx >= cur.length) { deleting = true; setTimeout(typeStep, 2200); return; }
+    } else {
+      cIdx--;
+      typer.textContent = cur.slice(0, cIdx);
+      if (cIdx <= 0) { deleting = false; pIdx = (pIdx + 1) % prompts.length; }
+    }
+    setTimeout(typeStep, deleting ? 30 : 55);
+  }
+  typeStep();
+
+  // ── audio · clickable titles + global toggle ──
+  const player    = document.getElementById("player");
+  const audioBtn  = document.getElementById("audioBtn");
+  const audioBtnLbl = document.getElementById("audioBtnLabel");
+  const nowPlay   = document.getElementById("nowPlay");
+  const npLabel   = document.getElementById("npLabel");
+  const npClose   = document.getElementById("npClose");
+  let audioOn = false;
+  let activeKey = null;
+
+  function setBtnState() {
+    audioBtn.classList.toggle("on", audioOn);
+    audioBtn.setAttribute("aria-pressed", audioOn ? "true" : "false");
+    audioBtnLbl.textContent = audioOn ? "audio · on" : "audio · off";
+  }
+  setBtnState();
+
+  function paintActive() {
+    document.querySelectorAll("[data-audio]").forEach(el => {
+      el.classList.toggle("playing", activeKey && el.dataset.audio === activeKey);
+    });
+  }
+
+  function stopAudio() {
+    player.pause();
+    player.removeAttribute("src");
+    player.load();
+    activeKey = null;
+    nowPlay.classList.remove("on");
+    paintActive();
+  }
+
+  function playFor(el) {
+    const key = el.dataset.audio;
+    const src = el.dataset.audioSrc;
+    const label = el.dataset.label || key;
+    if (activeKey === key && !player.paused) {
+      stopAudio();
+      return;
+    }
+    if (!audioOn) { audioOn = true; setBtnState(); }
+    player.src = src;
+    player.play().then(() => {
+      activeKey = key;
+      npLabel.textContent = label;
+      nowPlay.classList.add("on");
+      paintActive();
+    }).catch(() => {
+      // playback rejected (e.g., file missing) — restore state cleanly
+      activeKey = null;
+      nowPlay.classList.remove("on");
+      paintActive();
+    });
+  }
+
+  document.addEventListener("click", e => {
+    const el = e.target.closest("[data-audio]");
+    if (!el) return;
+    e.preventDefault();
+    playFor(el);
+  });
+
+  audioBtn.addEventListener("click", () => {
+    audioOn = !audioOn;
+    setBtnState();
+    if (!audioOn) stopAudio();
+  });
+
+  npClose.addEventListener("click", stopAudio);
+  player.addEventListener("ended", () => {
+    activeKey = null;
+    nowPlay.classList.remove("on");
+    paintActive();
+  });
+
+  // ── variable-font weight tied to scroll ──
+  const headlineLines = document.querySelectorAll(".cover-headline .line, .causion-poster h2, .flow h2, .manifesto h2");
+  let lastScroll = window.scrollY;
+  let velocity = 0;
+  function scrollLoop() {
+    const cur = window.scrollY;
+    velocity = velocity * 0.85 + (cur - lastScroll) * 0.15;
+    lastScroll = cur;
+    const w = Math.max(400, Math.min(900, 500 + Math.abs(velocity) * 14));
+    headlineLines.forEach(el => {
+      el.style.fontVariationSettings = `"opsz" 96, "wght" ${Math.round(w)}`;
+    });
+    requestAnimationFrame(scrollLoop);
+  }
+  scrollLoop();
+</script>
+
+</body>
+</html>
