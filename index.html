@@ -987,14 +987,54 @@
     color: var(--hot-pink);
     margin-right: 0.4em;
   }
-  .card .name[data-audio].playing,
-  .card .name-sub[data-audio].playing {
+  .card .name[data-audio].playing {
     color: var(--hot-pink);
   }
-  .card .name[data-audio].playing::before,
-  .card .name-sub[data-audio].playing::before {
+  .card .name[data-audio].playing::before {
     color: var(--hot-pink);
   }
+
+  /* ══ SUBTITLE audio · unique treatment ═════════════
+     Different voice (Andrew Neural · male), different content (poetic ethos
+     line per module), different visual cue: ◌ idle → ◉ playing, chartreuse */
+  [data-audio$="_sub"]::before {
+    content: "◌";
+    color: var(--chartreuse) !important;
+    text-shadow: 0 0 6px rgba(217,242,92,0.0);
+    transition: text-shadow 0.3s, color 0.2s, transform 0.25s, opacity 0.25s;
+  }
+  [data-audio$="_sub"]:hover::before {
+    text-shadow: 0 0 10px rgba(217,242,92,0.7);
+  }
+  [data-audio$="_sub"].playing::before {
+    content: "◉";
+    color: var(--chartreuse) !important;
+    text-shadow: 0 0 12px rgba(217,242,92,0.9);
+    animation: ring-pulse 1.3s ease-in-out infinite;
+  }
+  [data-audio$="_sub"].playing {
+    color: var(--chartreuse) !important;
+    font-style: italic;
+  }
+  @keyframes ring-pulse {
+    0%, 100% { transform: translateY(-0.15em) scale(1); text-shadow: 0 0 6px rgba(217,242,92,0.6); }
+    50%      { transform: translateY(-0.15em) scale(1.25); text-shadow: 0 0 16px rgba(217,242,92,1); }
+  }
+
+  /* now-playing chip shifts character when a subtitle is on */
+  .now-playing.is-sub {
+    border-color: var(--chartreuse);
+    background: var(--mulberry);
+  }
+  .now-playing.is-sub .bars span { background: var(--chartreuse); }
+  .now-playing.is-sub .label b::before {
+    content: "♪ ethos";
+  }
+  .now-playing .label b::before {
+    content: "▶ now playing";
+  }
+  .now-playing .label b { font-size: 0; }
+  .now-playing .label b::before { font-size: 10px; }
 
   /* dark/light section overrides */
   .tier.t1 [data-audio]::before,
@@ -1297,7 +1337,7 @@
       <div class="badge">⌗</div>
       <div class="num">01</div>
       <div class="name" data-audio="causal_calculus" data-audio-src="audio/modules/causal_calculus.mp3" data-label="T1·01 · Causal Calculus">Causal Calculus</div>
-      <div class="name-sub" data-audio="causal_calculus" data-audio-src="audio/modules/causal_calculus.mp3" data-label="T1·01 · Causal Calculus">interventional DAG operator</div>
+      <div class="name-sub" data-audio="causal_calculus_sub" data-audio-src="audio/modules/causal_calculus_sub.mp3" data-label="When intervention beats observation.">interventional DAG operator</div>
       <div class="spec">
         <div class="row"><span class="k">assay</span><span class="v">causal model + data layer</span></div>
         <div class="row"><span class="k">method</span><span class="v">interventional calculus on a DAG</span></div>
@@ -1310,7 +1350,7 @@
       <div class="badge">⌗</div>
       <div class="num">02</div>
       <div class="name" data-audio="causal_dag_builder" data-audio-src="audio/modules/causal_dag_builder.mp3" data-label="T1·02 · Causal DAG Builder">DAG Builder</div>
-      <div class="name-sub" data-audio="causal_dag_builder" data-audio-src="audio/modules/causal_dag_builder.mp3" data-label="T1·02 · Causal DAG Builder">graph structure learning</div>
+      <div class="name-sub" data-audio="causal_dag_builder_sub" data-audio-src="audio/modules/causal_dag_builder_sub.mp3" data-label="Pathways become geometry. Edges with direction.">graph structure learning</div>
       <div class="spec">
         <div class="row"><span class="k">assay</span><span class="v">omics + traits + (opt) MR edges</span></div>
         <div class="row"><span class="k">method</span><span class="v">structure learning / constraints</span></div>
@@ -1323,7 +1363,7 @@
       <div class="badge">⌗</div>
       <div class="num">03</div>
       <div class="name" data-audio="causality" data-audio-src="audio/modules/causality.mp3" data-label="T1·03 · Causality">Causality</div>
-      <div class="name-sub" data-audio="causality" data-audio-src="audio/modules/causality.mp3" data-label="T1·03 · Causality">effect decomposition</div>
+      <div class="name-sub" data-audio="causality_sub" data-audio-src="audio/modules/causality_sub.mp3" data-label="Untangle the influence. Name each one.">effect decomposition</div>
       <div class="spec">
         <div class="row"><span class="k">assay</span><span class="v">multi-omics + traits</span></div>
         <div class="row"><span class="k">method</span><span class="v">causal discovery + decomposition</span></div>
@@ -1336,7 +1376,7 @@
       <div class="badge">⌗</div>
       <div class="num">04</div>
       <div class="name" data-audio="centrality_calculator" data-audio-src="audio/modules/centrality_calculator.mp3" data-label="T1·04 · Centrality Calculator">Centrality</div>
-      <div class="name-sub" data-audio="centrality_calculator" data-audio-src="audio/modules/centrality_calculator.mp3" data-label="T1·04 · Centrality Calculator">network bottlenecks</div>
+      <div class="name-sub" data-audio="centrality_calculator_sub" data-audio-src="audio/modules/centrality_calculator_sub.mp3" data-label="Find the node the network cannot afford to lose.">network bottlenecks</div>
       <div class="spec">
         <div class="row"><span class="k">assay</span><span class="v">PPI · GRN · pathway graph</span></div>
         <div class="row"><span class="k">method</span><span class="v">centrality + bottleneck metrics</span></div>
@@ -1349,7 +1389,7 @@
       <div class="badge">⌗</div>
       <div class="num">05</div>
       <div class="name" data-audio="gwas_mendelian_randomization" data-audio-src="audio/modules/gwas_mendelian_randomization.mp3" data-label="T1·05 · GWAS / Mendelian Randomization">GWAS · MR</div>
-      <div class="name-sub" data-audio="gwas_mendelian_randomization" data-audio-src="audio/modules/gwas_mendelian_randomization.mp3" data-label="T1·05 · GWAS / Mendelian Randomization">mendelian randomization</div>
+      <div class="name-sub" data-audio="gwas_mendelian_randomization_sub" data-audio-src="audio/modules/gwas_mendelian_randomization_sub.mp3" data-label="Genetics, the instrument. Causation, the verdict.">mendelian randomization</div>
       <div class="spec">
         <div class="row"><span class="k">assay</span><span class="v">GWAS + LD-matched stats</span></div>
         <div class="row"><span class="k">method</span><span class="v">two-sample MR · IVW · sensitivity</span></div>
@@ -1362,7 +1402,7 @@
       <div class="badge">⌗</div>
       <div class="num">06</div>
       <div class="name" data-audio="in_silico_perturbation_patient" data-audio-src="audio/modules/in_silico_perturbation_patient.mp3" data-label="T1·06 · In-silico Perturbation · Patient">Perturbation · Patient</div>
-      <div class="name-sub" data-audio="in_silico_perturbation_patient" data-audio-src="audio/modules/in_silico_perturbation_patient.mp3" data-label="T1·06 · In-silico Perturbation · Patient">single-patient counterfactuals</div>
+      <div class="name-sub" data-audio="in_silico_perturbation_patient_sub" data-audio-src="audio/modules/in_silico_perturbation_patient_sub.mp3" data-label="What would happen for this one body if we changed this gene?">single-patient counterfactuals</div>
       <div class="spec">
         <div class="row"><span class="k">assay</span><span class="v">patient embedding / state model</span></div>
         <div class="row"><span class="k">method</span><span class="v">single-patient counterfactuals</span></div>
@@ -1375,7 +1415,7 @@
       <div class="badge">⌗</div>
       <div class="num">07</div>
       <div class="name" data-audio="in_silico_perturbation_population" data-audio-src="audio/modules/in_silico_perturbation_population.mp3" data-label="T1·07 · In-silico Perturbation · Population">Perturbation · Population</div>
-      <div class="name-sub" data-audio="in_silico_perturbation_population" data-audio-src="audio/modules/in_silico_perturbation_population.mp3" data-label="T1·07 · In-silico Perturbation · Population">KO / activation simulation</div>
+      <div class="name-sub" data-audio="in_silico_perturbation_population_sub" data-audio-src="audio/modules/in_silico_perturbation_population_sub.mp3" data-label="Knock it out across the cohort. Read the consequence.">KO / activation simulation</div>
       <div class="spec">
         <div class="row"><span class="k">assay</span><span class="v">pseudobulk · cohort-level</span></div>
         <div class="row"><span class="k">method</span><span class="v">KO / activation simulation</span></div>
@@ -1388,7 +1428,7 @@
       <div class="badge">⌗</div>
       <div class="num">08</div>
       <div class="name" data-audio="signor_causality" data-audio-src="audio/modules/signor_causality.mp3" data-label="T1·08 · SIGNOR Causality">SIGNOR</div>
-      <div class="name-sub" data-audio="signor_causality" data-audio-src="audio/modules/signor_causality.mp3" data-label="T1·08 · SIGNOR Causality">literature-anchored</div>
+      <div class="name-sub" data-audio="signor_causality_sub" data-audio-src="audio/modules/signor_causality_sub.mp3" data-label="Decades of literature, compiled into directed edges.">literature-anchored</div>
       <div class="spec">
         <div class="row"><span class="k">assay</span><span class="v">priors + (opt) gene lists</span></div>
         <div class="row"><span class="k">method</span><span class="v">literature path models</span></div>
@@ -1417,43 +1457,43 @@
   </p>
   <div class="cards" data-stagger>
 
-    <article class="card"><div class="badge">⌗</div><div class="num">01</div><div class="name" data-audio="deconvolution" data-audio-src="audio/modules/deconvolution.mp3" data-label="T2·01 · Deconvolution">Deconvolution</div><div class="name-sub" data-audio="deconvolution" data-audio-src="audio/modules/deconvolution.mp3" data-label="T2·01 · Deconvolution">mixed-tissue resolver</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">01</div><div class="name" data-audio="deconvolution" data-audio-src="audio/modules/deconvolution.mp3" data-label="T2·01 · Deconvolution">Deconvolution</div><div class="name-sub" data-audio="deconvolution_sub" data-audio-src="audio/modules/deconvolution_sub.mp3" data-label="Bulk in. Cell types out.">mixed-tissue resolver</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">bulk RNA-seq (mixed tissue)</span></div><div class="row"><span class="k">method</span><span class="v">reference-based deconvolution</span></div></div>
       <div class="func">Deconvolve immune cell types in tumor samples.</div><div class="scope-tag">multi</div>
     </article>
-    <article class="card"><div class="badge">⌗</div><div class="num">02</div><div class="name" data-audio="deg_analysis" data-audio-src="audio/modules/deg_analysis.mp3" data-label="T2·02 · DEG Analysis">DEG Analysis</div><div class="name-sub" data-audio="deg_analysis" data-audio-src="audio/modules/deg_analysis.mp3" data-label="T2·02 · DEG Analysis">DESeq2 · limma-voom</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">02</div><div class="name" data-audio="deg_analysis" data-audio-src="audio/modules/deg_analysis.mp3" data-label="T2·02 · DEG Analysis">DEG Analysis</div><div class="name-sub" data-audio="deg_analysis_sub" data-audio-src="audio/modules/deg_analysis_sub.mp3" data-label="Healthy versus diseased. Gene by gene.">DESeq2 · limma-voom</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">bulk RNA-seq</span></div><div class="row"><span class="k">method</span><span class="v">DESeq2 · limma-voom</span></div></div>
       <div class="func">Find DEGs between healthy and diseased samples.</div><div class="scope-tag">multi</div>
     </article>
-    <article class="card"><div class="badge">⌗</div><div class="num">03</div><div class="name" data-audio="gene_prioritization" data-audio-src="audio/modules/gene_prioritization.mp3" data-label="T2·03 · Gene Prioritization">Gene Prioritization</div><div class="name-sub" data-audio="gene_prioritization" data-audio-src="audio/modules/gene_prioritization.mp3" data-label="T2·03 · Gene Prioritization">score fusion</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">03</div><div class="name" data-audio="gene_prioritization" data-audio-src="audio/modules/gene_prioritization.mp3" data-label="T2·03 · Gene Prioritization">Gene Prioritization</div><div class="name-sub" data-audio="gene_prioritization_sub" data-audio-src="audio/modules/gene_prioritization_sub.mp3" data-label="Many evidences. One ranked list.">score fusion</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">ranked gene lists</span></div><div class="row"><span class="k">method</span><span class="v">score fusion + network priors</span></div></div>
       <div class="func">Prioritize genes for drug target discovery.</div><div class="scope-tag">multi</div>
     </article>
-    <article class="card"><div class="badge">⌗</div><div class="num">04</div><div class="name" data-audio="gsea_pathway_enrichment" data-audio-src="audio/modules/gsea_pathway_enrichment.mp3" data-label="T2·04 · GSEA Pathway Enrichment">GSEA</div><div class="name-sub" data-audio="gsea_pathway_enrichment" data-audio-src="audio/modules/gsea_pathway_enrichment.mp3" data-label="T2·04 · GSEA Pathway Enrichment">preranked enrichment</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">04</div><div class="name" data-audio="gsea_pathway_enrichment" data-audio-src="audio/modules/gsea_pathway_enrichment.mp3" data-label="T2·04 · GSEA Pathway Enrichment">GSEA</div><div class="name-sub" data-audio="gsea_pathway_enrichment_sub" data-audio-src="audio/modules/gsea_pathway_enrichment_sub.mp3" data-label="Order matters. The set, not the cherry-picked gene.">preranked enrichment</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">expression ranks</span></div><div class="row"><span class="k">method</span><span class="v">GSEA · preranked</span></div></div>
       <div class="func">Run GSEA on a ranked gene list.</div><div class="scope-tag">multi</div>
     </article>
-    <article class="card"><div class="badge">⌗</div><div class="num">05</div><div class="name" data-audio="multi_omics_analysis" data-audio-src="audio/modules/multi_omics_analysis.mp3" data-label="T2·05 · Multi-omics Analysis">Multi-Omics</div><div class="name-sub" data-audio="multi_omics_analysis" data-audio-src="audio/modules/multi_omics_analysis.mp3" data-label="T2·05 · Multi-omics Analysis">block fusion</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">05</div><div class="name" data-audio="multi_omics_analysis" data-audio-src="audio/modules/multi_omics_analysis.mp3" data-label="T2·05 · Multi-omics Analysis">Multi-Omics</div><div class="name-sub" data-audio="multi_omics_analysis_sub" data-audio-src="audio/modules/multi_omics_analysis_sub.mp3" data-label="RNA. Protein. Metabolite. One coupled story.">block fusion</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">RNA + proteome (+ metabolome)</span></div><div class="row"><span class="k">method</span><span class="v">block fusion + sparse coupling</span></div></div>
       <div class="func">Integrate multi-omics for holistic biomarker discovery.</div><div class="scope-tag">multi</div>
     </article>
-    <article class="card"><div class="badge">⌗</div><div class="num">06</div><div class="name" data-audio="pathway_enrichment" data-audio-src="audio/modules/pathway_enrichment.mp3" data-label="T2·06 · Pathway Enrichment">Pathway Enrichment</div><div class="name-sub" data-audio="pathway_enrichment" data-audio-src="audio/modules/pathway_enrichment.mp3" data-label="T2·06 · Pathway Enrichment">topology-aware</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">06</div><div class="name" data-audio="pathway_enrichment" data-audio-src="audio/modules/pathway_enrichment.mp3" data-label="T2·06 · Pathway Enrichment">Pathway Enrichment</div><div class="name-sub" data-audio="pathway_enrichment_sub" data-audio-src="audio/modules/pathway_enrichment_sub.mp3" data-label="Pathways have structure. Use it.">topology-aware</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">ranked genes / DE table</span></div><div class="row"><span class="k">method</span><span class="v">over-representation + topology</span></div></div>
       <div class="func">Compare pathway alterations across diseases.</div><div class="scope-tag">multi</div>
     </article>
-    <article class="card"><div class="badge">⌗</div><div class="num">07</div><div class="name" data-audio="single_cell_analysis" data-audio-src="audio/modules/single_cell_analysis.mp3" data-label="T2·07 · Single-cell Analysis">Single-Cell</div><div class="name-sub" data-audio="single_cell_analysis" data-audio-src="audio/modules/single_cell_analysis.mp3" data-label="T2·07 · Single-cell Analysis">QC → embedding → typing</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">07</div><div class="name" data-audio="single_cell_analysis" data-audio-src="audio/modules/single_cell_analysis.mp3" data-label="T2·07 · Single-cell Analysis">Single-Cell</div><div class="name-sub" data-audio="single_cell_analysis_sub" data-audio-src="audio/modules/single_cell_analysis_sub.mp3" data-label="From counts to cells, to types, to insight.">QC → embedding → typing</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">scRNA-seq (counts)</span></div><div class="row"><span class="k">method</span><span class="v">QC → embedding → cell typing</span></div></div>
       <div class="func">Cluster single-cell RNA-seq data.</div><div class="scope-tag">multi</div>
     </article>
-    <article class="card"><div class="badge">⌗</div><div class="num">08</div><div class="name" data-audio="temporal_analysis_bulk" data-audio-src="audio/modules/temporal_analysis_bulk.mp3" data-label="T2·08 · Temporal Analysis · Bulk">Temporal · Bulk</div><div class="name-sub" data-audio="temporal_analysis_bulk" data-audio-src="audio/modules/temporal_analysis_bulk.mp3" data-label="T2·08 · Temporal Analysis · Bulk">dynamic genes</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">08</div><div class="name" data-audio="temporal_analysis_bulk" data-audio-src="audio/modules/temporal_analysis_bulk.mp3" data-label="T2·08 · Temporal Analysis · Bulk">Temporal · Bulk</div><div class="name-sub" data-audio="temporal_analysis_bulk_sub" data-audio-src="audio/modules/temporal_analysis_bulk_sub.mp3" data-label="Find what moves with time.">dynamic genes</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">time-series expression</span></div><div class="row"><span class="k">method</span><span class="v">differential dynamics + smoothing</span></div></div>
       <div class="func">Identify genes that change dynamically over time.</div><div class="scope-tag">multi</div>
     </article>
-    <article class="card"><div class="badge">⌗</div><div class="num">09</div><div class="name" data-audio="temporal_granger_analysis" data-audio-src="audio/modules/temporal_granger_analysis.mp3" data-label="T2·09 · Temporal Granger Analysis">Temporal · Granger</div><div class="name-sub" data-audio="temporal_granger_analysis" data-audio-src="audio/modules/temporal_granger_analysis.mp3" data-label="T2·09 · Temporal Granger Analysis">VAR-style screens</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">09</div><div class="name" data-audio="temporal_granger_analysis" data-audio-src="audio/modules/temporal_granger_analysis.mp3" data-label="T2·09 · Temporal Granger Analysis">Temporal · Granger</div><div class="name-sub" data-audio="temporal_granger_analysis_sub" data-audio-src="audio/modules/temporal_granger_analysis_sub.mp3" data-label="Did it predict, or did it follow?">VAR-style screens</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">multivariate time series</span></div><div class="row"><span class="k">method</span><span class="v">Granger · VAR-style screens</span></div></div>
       <div class="func">Run temporal Granger with a curated gene list.</div><div class="scope-tag">multi</div>
     </article>
-    <article class="card"><div class="badge">⌗</div><div class="num">10</div><div class="name" data-audio="total_rna_pipeline" data-audio-src="audio/modules/total_rna_pipeline.mp3" data-label="T2·10 · Total RNA Pipeline">Total RNA Pipeline</div><div class="name-sub" data-audio="total_rna_pipeline" data-audio-src="audio/modules/total_rna_pipeline.mp3" data-label="T2·10 · Total RNA Pipeline">end-to-end Salmon stack</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">10</div><div class="name" data-audio="total_rna_pipeline" data-audio-src="audio/modules/total_rna_pipeline.mp3" data-label="T2·10 · Total RNA Pipeline">Total RNA Pipeline</div><div class="name-sub" data-audio="total_rna_pipeline_sub" data-audio-src="audio/modules/total_rna_pipeline_sub.mp3" data-label="From quant files to a defensible result.">end-to-end Salmon stack</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">bulk RNA-seq (Salmon quant)</span></div><div class="row"><span class="k">method</span><span class="v">tximport → DTU → DE → WGCNA → GSEA → ML</span></div></div>
       <div class="func">Run full total-RNA pipeline from Salmon *.quant.sf files.</div><div class="scope-tag">multi</div>
     </article>
@@ -1478,31 +1518,31 @@
   </p>
   <div class="cards" data-stagger>
 
-    <article class="card"><div class="badge">⌗</div><div class="num">01</div><div class="name" data-audio="cohort_retrieval" data-audio-src="audio/modules/cohort_retrieval.mp3" data-label="T3·01 · Cohort Retrieval">Cohort Retrieval</div><div class="name-sub" data-audio="cohort_retrieval" data-audio-src="audio/modules/cohort_retrieval.mp3" data-label="T3·01 · Cohort Retrieval">federated query</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">01</div><div class="name" data-audio="cohort_retrieval" data-audio-src="audio/modules/cohort_retrieval.mp3" data-label="T3·01 · Cohort Retrieval">Cohort Retrieval</div><div class="name-sub" data-audio="cohort_retrieval_sub" data-audio-src="audio/modules/cohort_retrieval_sub.mp3" data-label="Patient cohorts, pulled across institutional walls.">federated query</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">cohort + omics (mixed)</span></div><div class="row"><span class="k">method</span><span class="v">federated / warehouse query</span></div></div>
       <div class="func">Retrieve patient data for disease X.</div><div class="scope-tag">multi</div>
     </article>
-    <article class="card"><div class="badge">⌗</div><div class="num">02</div><div class="name" data-audio="crispr_perturb_seq" data-audio-src="audio/modules/crispr_perturb_seq.mp3" data-label="T3·02 · CRISPR Perturb-seq">CRISPR · Perturb-seq</div><div class="name-sub" data-audio="crispr_perturb_seq" data-audio-src="audio/modules/crispr_perturb_seq.mp3" data-label="T3·02 · CRISPR Perturb-seq">single-cell perturbation</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">02</div><div class="name" data-audio="crispr_perturb_seq" data-audio-src="audio/modules/crispr_perturb_seq.mp3" data-label="T3·02 · CRISPR Perturb-seq">CRISPR · Perturb-seq</div><div class="name-sub" data-audio="crispr_perturb_seq_sub" data-audio-src="audio/modules/crispr_perturb_seq_sub.mp3" data-label="Edit a gene. Watch the cell speak.">single-cell perturbation</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">scRNA with perturbations</span></div><div class="row"><span class="k">method</span><span class="v">differential + program discovery</span></div></div>
       <div class="func">Analyze Perturb-seq with guide RNAs and scRNA-seq.</div><div class="scope-tag">multi</div>
     </article>
-    <article class="card"><div class="badge">⌗</div><div class="num">03</div><div class="name" data-audio="crispr_screening" data-audio-src="audio/modules/crispr_screening.mp3" data-label="T3·03 · CRISPR Screening">CRISPR · Screening</div><div class="name-sub" data-audio="crispr_screening" data-audio-src="audio/modules/crispr_screening.mp3" data-label="T3·03 · CRISPR Screening">pooled hit calling</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">03</div><div class="name" data-audio="crispr_screening" data-audio-src="audio/modules/crispr_screening.mp3" data-label="T3·03 · CRISPR Screening">CRISPR · Screening</div><div class="name-sub" data-audio="crispr_screening_sub" data-audio-src="audio/modules/crispr_screening_sub.mp3" data-label="Tens of thousands of edits. Find the hits that matter.">pooled hit calling</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">pooled screens (viability)</span></div><div class="row"><span class="k">method</span><span class="v">normalization + hit calling</span></div></div>
       <div class="func">Run DNA CRISPR pooled data — screening effects.</div><div class="scope-tag">multi</div>
     </article>
-    <article class="card"><div class="badge">⌗</div><div class="num">04</div><div class="name" data-audio="crispr_targeted_amplicon" data-audio-src="audio/modules/crispr_targeted_amplicon.mp3" data-label="T3·04 · CRISPR Targeted / Amplicon">CRISPR · Amplicon</div><div class="name-sub" data-audio="crispr_targeted_amplicon" data-audio-src="audio/modules/crispr_targeted_amplicon.mp3" data-label="T3·04 · CRISPR Targeted / Amplicon">targeted validation</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">04</div><div class="name" data-audio="crispr_targeted_amplicon" data-audio-src="audio/modules/crispr_targeted_amplicon.mp3" data-label="T3·04 · CRISPR Targeted / Amplicon">CRISPR · Amplicon</div><div class="name-sub" data-audio="crispr_targeted_amplicon_sub" data-audio-src="audio/modules/crispr_targeted_amplicon_sub.mp3" data-label="Did the edit land? Sequence the locus.">targeted validation</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">targeted CRISPR validation</span></div><div class="row"><span class="k">method</span><span class="v">paired end-point / growth</span></div></div>
       <div class="func">Analyze amplicon-seq data for genome edits.</div><div class="scope-tag">multi</div>
     </article>
-    <article class="card"><div class="badge">⌗</div><div class="num">05</div><div class="name" data-audio="data_harmonization" data-audio-src="audio/modules/data_harmonization.mp3" data-label="T3·05 · Data Harmonization">Harmonization</div><div class="name-sub" data-audio="data_harmonization" data-audio-src="audio/modules/data_harmonization.mp3" data-label="T3·05 · Data Harmonization">cross-platform</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">05</div><div class="name" data-audio="data_harmonization" data-audio-src="audio/modules/data_harmonization.mp3" data-label="T3·05 · Data Harmonization">Harmonization</div><div class="name-sub" data-audio="data_harmonization_sub" data-audio-src="audio/modules/data_harmonization_sub.mp3" data-label="Different platforms. Different batches. One coherent table.">cross-platform</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">multi-study tables</span></div><div class="row"><span class="k">method</span><span class="v">ComBat / harmonization</span></div></div>
       <div class="func">Harmonize RNA-seq across different platforms.</div><div class="scope-tag">multi</div>
     </article>
-    <article class="card"><div class="badge">⌗</div><div class="num">06</div><div class="name" data-audio="fastq_processing" data-audio-src="audio/modules/fastq_processing.mp3" data-label="T3·06 · FASTQ Processing">FASTQ Processing</div><div class="name-sub" data-audio="fastq_processing" data-audio-src="audio/modules/fastq_processing.mp3" data-label="T3·06 · FASTQ Processing">alignment + quant</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">06</div><div class="name" data-audio="fastq_processing" data-audio-src="audio/modules/fastq_processing.mp3" data-label="T3·06 · FASTQ Processing">FASTQ Processing</div><div class="name-sub" data-audio="fastq_processing_sub" data-audio-src="audio/modules/fastq_processing_sub.mp3" data-label="Raw reads in. Counts out. Provenance kept.">alignment + quant</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">sequencing reads (FASTQ)</span></div><div class="row"><span class="k">method</span><span class="v">alignment + quant pipeline</span></div></div>
       <div class="func">Quality control and process FASTQ files.</div><div class="scope-tag">multi</div>
     </article>
-    <article class="card"><div class="badge">⌗</div><div class="num">07</div><div class="name" data-audio="perturbation_analysis" data-audio-src="audio/modules/perturbation_analysis.mp3" data-label="T3·07 · Perturbation Analysis">Perturbation Analysis</div><div class="name-sub" data-audio="perturbation_analysis" data-audio-src="audio/modules/perturbation_analysis.mp3" data-label="T3·07 · Perturbation Analysis">knockout effects</div>
+    <article class="card"><div class="badge">⌗</div><div class="num">07</div><div class="name" data-audio="perturbation_analysis" data-audio-src="audio/modules/perturbation_analysis.mp3" data-label="T3·07 · Perturbation Analysis">Perturbation Analysis</div><div class="name-sub" data-audio="perturbation_analysis_sub" data-audio-src="audio/modules/perturbation_analysis_sub.mp3" data-label="Knockouts produce phenotypes. Measure them.">knockout effects</div>
       <div class="spec"><div class="row"><span class="k">assay</span><span class="v">perturb-seq / targeted screens</span></div><div class="row"><span class="k">method</span><span class="v">perturbation differential models</span></div></div>
       <div class="func">Analyze CRISPR knockout effects on gene expression.</div><div class="scope-tag">multi</div>
     </article>
@@ -1751,7 +1791,7 @@
     player.removeAttribute("src");
     player.load();
     activeKey = null;
-    nowPlay.classList.remove("on");
+    nowPlay.classList.remove("on", "is-sub");
     paintActive();
   }
 
@@ -1769,11 +1809,11 @@
       activeKey = key;
       npLabel.textContent = label;
       nowPlay.classList.add("on");
+      nowPlay.classList.toggle("is-sub", key.endsWith("_sub"));
       paintActive();
     }).catch(() => {
-      // playback rejected (e.g., file missing) — restore state cleanly
       activeKey = null;
-      nowPlay.classList.remove("on");
+      nowPlay.classList.remove("on", "is-sub");
       paintActive();
     });
   }
@@ -1794,7 +1834,7 @@
   npClose.addEventListener("click", stopAudio);
   player.addEventListener("ended", () => {
     activeKey = null;
-    nowPlay.classList.remove("on");
+    nowPlay.classList.remove("on", "is-sub");
     paintActive();
   });
 
