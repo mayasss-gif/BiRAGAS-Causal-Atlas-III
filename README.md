@@ -99,7 +99,11 @@ python3 -m http.server 8000
 # → http://localhost:8000/
 ```
 
-## To deploy on GitHub Pages
+## Live URL
+
+**https://mayasss-gif.github.io/BiRAGAS-Causal-Atlas-III/**
+
+## Deployment commands used (for reference)
 
 ```bash
 cd "/Users/mohamadammarayass/Desktop/Ayass _ Strategic Planning/BiRAGAS Causal Atlas"
